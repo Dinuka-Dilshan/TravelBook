@@ -5,17 +5,16 @@ const { Schema, model } = mongoose;
 const placeSchema = new Schema({
   name: String,
   description: String,
-  state:String,
-  country:String,
+  state: String,
+  country: String,
   latitude: Number,
   longitude: Number,
   photos: [String],
-  type: String,
-  contactNumber: Number,
   addedBy: {
-    user: String,
-    time: Date,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
+  addedOn: Date,
   comments: [
     {
       time: Date,
