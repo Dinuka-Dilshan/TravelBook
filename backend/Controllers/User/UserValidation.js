@@ -91,3 +91,21 @@ export default checkSchema({
     },
   },
 });
+
+export const userLoginValidation = checkSchema({
+  email: {
+    in: ["body"],
+    isEmail: {
+      errorMessage: "invalid email",
+    },
+    notEmpty: {
+      errorMessage: "email cannot be empty",
+    },
+  },
+  password: {
+    in: ["body"],
+    notEmpty: {
+      errorMessage: "password cannot be empty",
+    },
+  },
+});
