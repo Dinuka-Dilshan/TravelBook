@@ -1,8 +1,11 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { NavLink } from "react-router-dom";
-
+import { useAppSelector } from "../../store/hooks";
+import { selectUser } from "../../store/slices/authSlice";
 const AppBar = () => {
+  const user = useAppSelector(selectUser);
+
   const activeStyles = {
     textDecoration: "none",
     fontFamily: "Poppins, sans-seri",
@@ -65,12 +68,14 @@ const AppBar = () => {
         >
           Trending
         </NavLink>
-        <NavLink
-          style={({ isActive }) => (isActive ? activeStyles : inActiveStyles)}
-          to={"/login"}
-        >
-          Login
-        </NavLink>
+        {!Boolean(user._id) && (
+          <NavLink
+            style={({ isActive }) => (isActive ? activeStyles : inActiveStyles)}
+            to={"/login"}
+          >
+            Login
+          </NavLink>
+        )}
       </Box>
     </Box>
   );
