@@ -5,7 +5,7 @@ errors.set("not-found", {
   message: "Not Found",
 });
 
-errors.set("un-authoriaed", {
+errors.set("un-authorized", {
   errorCode: 401,
   message: "Authentication Failed",
 });
