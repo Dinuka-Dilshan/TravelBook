@@ -15,6 +15,7 @@ import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import isEmail from "validator/es/lib/isEmail";
+import isEmpty from "validator/es/lib/isEmpty";
 import useFetch from "../hooks/useFetch";
 import useForm from "../hooks/useForm";
 import { useAppDispatch } from "../store/hooks";
@@ -33,20 +34,24 @@ const Login = () => {
       email: {
         value: "",
         isValid: false,
-        errorMessage: "Invalid Email Address",
-        validator: (val) => isEmail(val),
+        validators: [
+          { validator: (val) => isEmail(val), errorMessage: "Invalid Email" },
+        ],
         isTouched: false,
       },
       password: {
         value: "",
         isValid: false,
-        errorMessage: "",
-        validator: (val) => val.length > 5,
+        validators: [
+          {
+            validator: (val) => !isEmpty(val),
+            errorMessage: "Password cannot be empty",
+          },
+        ],
         isTouched: false,
       },
     },
   });
-
   const handleClickShowPassword = () => {
     setIsPasswordShow((p) => !p);
   };
@@ -63,11 +68,10 @@ const Login = () => {
           password: field("password").value,
         },
         useToken: false,
-        method: "POST"
+        method: "POST",
       });
     }
   };
-
   useEffect(() => {
     if (data?.token) {
       dispatch(login(data));
@@ -86,7 +90,6 @@ const Login = () => {
         bgcolor="#F6F6F6"
         borderRadius="0.8rem"
       >
-        
         <Typography color="custom.fontGray" fontSize="1.5rem">
           Login
         </Typography>
@@ -102,9 +105,11 @@ const Login = () => {
               inputHandler("email", e.target.value);
             }}
           />
-          {!field("email").isValid &&
-            field("email").isTouched &&
-            field("email").errorMessage}
+          {!field("email").isValid && field("email").isTouched && (
+            <Typography pt="0.5rem" color={"custom.red"}>
+              {field("email").errorMessage}
+            </Typography>
+          )}
           <FormControl sx={{ mt: "1rem" }} variant="outlined" fullWidth>
             <InputLabel htmlFor="outlined-adornment-password">
               Password
@@ -113,6 +118,9 @@ const Login = () => {
               value={field("password").value}
               onChange={(e) => {
                 inputHandler("password", e.target.value);
+              }}
+              onBlur={() => {
+                touchHandler("password");
               }}
               fullWidth
               id="outlined-adornment-password"
@@ -132,6 +140,11 @@ const Login = () => {
               label="Password"
             />
           </FormControl>
+          {!field("password").isValid && field("password").isTouched && (
+            <Typography pt="0.5rem" color={"custom.red"}>
+              {field("password").errorMessage}
+            </Typography>
+          )}
 
           <Button
             fullWidth

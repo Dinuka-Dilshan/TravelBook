@@ -5,7 +5,7 @@ import App from "./App";
 import "./index.css";
 import ThemeProvider from "./Theme";
 import store from "./store/store";
-import Notification from "./components/Notification/Notification";
+import Notification from "./components/Notification";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);

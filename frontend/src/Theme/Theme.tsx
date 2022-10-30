@@ -30,7 +30,8 @@ const theme = createTheme({
       gray: "#E8E9EB",
       lightGray:'#F6F6F6',
       fontGray:'#545454',
-      darkBlue:'#104CBE'
+      darkBlue:'#104CBE',
+      red:'#d32f2f'
     },
   },
   typography: {

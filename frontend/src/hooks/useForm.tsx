@@ -1,11 +1,16 @@
 import { useCallback, useReducer } from "react";
 
+type Validator = {
+  errorMessage: string;
+  validator: (value: string) => boolean;
+};
+
 type FormField = {
   value: string;
   isValid: boolean;
-  errorMessage: string;
-  validator: (value: string) => boolean;
+  validators: Validator[];
   isTouched: boolean;
+  errorMessage?: string;
 };
 
 type FormState = {
@@ -23,23 +28,41 @@ type Action = {
   };
 };
 
+const runValidators = (validators: Validator[], value: string) => {
+  let message = "";
+  let isFieldValid = true;
+  for (const validator of validators) {
+    if (!validator.validator(value)) {
+      isFieldValid = false;
+      break;
+    }
+  }
+  return { isFieldValid, message };
+};
+
 const reducer = (state: FormState, action: Action) => {
   switch (action.type) {
     case "INPUT_CHANGE":
       const isFormValid = Object.keys(state.fields).reduce((validity, key) => {
-        return state.fields[key].isValid && validity;
+        if (key !== action.payload.key) {
+          return state.fields[key].isValid && validity;
+        }
+        return validity;
       }, true);
       const changedField = { ...state.fields[action.payload.key] };
-      const isFieldValid = changedField.validator(action.payload.value);
-
+      const validatorOutput = runValidators(
+        changedField.validators,
+        action.payload.value
+      );
       return {
-        isValid: isFormValid && isFieldValid,
+        isValid: isFormValid && validatorOutput.isFieldValid,
         fields: {
           ...state.fields,
           [action.payload.key]: {
             ...changedField,
-            isValid: isFieldValid,
+            isValid: validatorOutput.isFieldValid,
             value: action.payload.value,
+            errorMessage: validatorOutput.message,
           },
         },
       };
