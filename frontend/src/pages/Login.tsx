@@ -1,3 +1,4 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
   FormControl,
@@ -9,17 +10,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
-import { Visibility } from "@mui/icons-material";
-import { VisibilityOff } from "@mui/icons-material";
-import { login } from "../store/slices/authSlice";
-import { useAppDispatch } from "../store/hooks";
-import useForm from "../hooks/useForm";
-import isEmail from "validator/es/lib/isEmail";
 import { useNavigate } from "react-router-dom";
-import useFetch from "../hooks/usefetch";
+import isEmail from "validator/es/lib/isEmail";
+import useFetch from "../hooks/useFetch";
+import useForm from "../hooks/useForm";
+import { useAppDispatch } from "../store/hooks";
 import type { AuthState } from "../store/slices/authSlice";
+import { login } from "../store/slices/authSlice";
 
 const Login = () => {
   const [isPasswordShow, setIsPasswordShow] = useState(false);
@@ -58,8 +58,12 @@ const Login = () => {
   const handleLogin = () => {
     if (state.isValid) {
       fetchData("user/login", {
-        email: field("email").value,
-        password: field("password").value,
+        body: {
+          email: field("email").value,
+          password: field("password").value,
+        },
+        useToken: false,
+        method: "POST"
       });
     }
   };
@@ -82,7 +86,7 @@ const Login = () => {
         bgcolor="#F6F6F6"
         borderRadius="0.8rem"
       >
-        {isError && error}
+        
         <Typography color="custom.fontGray" fontSize="1.5rem">
           Login
         </Typography>
@@ -131,12 +135,19 @@ const Login = () => {
 
           <Button
             fullWidth
-            disabled={!state.isValid}
+            disabled={!state.isValid || isLoading}
             sx={{ mt: "4rem" }}
             variant="contained"
             onClick={handleLogin}
           >
             Login
+            {isLoading && (
+              <CircularProgress
+                color="inherit"
+                size={"1.3rem"}
+                sx={{ ml: "1rem" }}
+              />
+            )}
           </Button>
           <Typography
             textAlign="center"
