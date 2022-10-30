@@ -16,7 +16,7 @@ colors.set("SUCCESS", "#2E7D32");
 const Notification = () => {
   const notifications = useSelector(selectNotification);
   const dispatch = useDispatch();
-
+  
   return (
     <>
       {notifications.map((notification, index) => {
