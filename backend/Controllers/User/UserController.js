@@ -82,7 +82,7 @@ export const loginController = async (req, res, next) => {
     foundUser = await User.findOne({ email });
     foundUser = foundUser._doc;
   } catch (error) {
-    return next(ErrorResponse());
+    return next(ErrorResponse({ code: 404, message: "Email or Password is Incorrect" }));
   }
 
   if (!foundUser) {
