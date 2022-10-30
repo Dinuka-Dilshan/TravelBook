@@ -1,11 +1,17 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store/hooks";
-import { selectUser } from "../../store/slices/authSlice";
+import { logout, selectUser } from "../../store/slices/authSlice";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Confirm from "../Confirm";
+import { useCallback, useState } from "react";
 const AppBar = () => {
   const user = useAppSelector(selectUser);
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const activeStyles = {
     textDecoration: "none",
     fontFamily: "Poppins, sans-seri",
@@ -19,6 +25,17 @@ const AppBar = () => {
     color: "white",
     fontSize: "1rem",
   };
+
+  const okHandler = useCallback(() => {
+    localStorage.clear();
+    dispatch(logout());
+    navigate("/login");
+    setIsConfirmOpen(false);
+  },[]);
+
+  const notOkHandler = useCallback(() => {
+    setIsConfirmOpen(false);
+  },[]);
 
   return (
     <Box
@@ -36,6 +53,9 @@ const AppBar = () => {
       boxSizing={"border-box"}
       bgcolor="primary.main"
     >
+      {isConfirmOpen && (
+        <Confirm onConfirmOk={okHandler} onConfirmNotOk={notOkHandler} />
+      )}
       <Typography
         fontSize={"1.2rem"}
         color="white"
@@ -68,7 +88,15 @@ const AppBar = () => {
         >
           Trending
         </NavLink>
-        {!Boolean(user._id) && (
+        {Boolean(user._id) ? (
+          <Button
+            onClick={() => {
+              setIsConfirmOpen(true);
+            }}
+          >
+            <LogoutIcon sx={{ color: "white" }} />
+          </Button>
+        ) : (
           <NavLink
             style={({ isActive }) => (isActive ? activeStyles : inActiveStyles)}
             to={"/login"}
