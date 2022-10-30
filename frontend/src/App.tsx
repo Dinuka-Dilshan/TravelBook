@@ -5,11 +5,12 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Landing from "./components/Landing";
-import MainLayout from "./pages/MainLayout";
-import Login from "./pages/Login";
-import Places from "./pages/Places";
-import PlaceDetails from "./pages/PlaceDetails";
+import RequireAuth from "./components/RequireAuth/RequireAuth";
 import Hotels from "./pages/Hotels";
+import Login from "./pages/Login";
+import MainLayout from "./pages/MainLayout";
+import PlaceDetails from "./pages/PlaceDetails";
+import Places from "./pages/Places";
 import Trending from "./pages/Trending";
 
 const router = createBrowserRouter(
@@ -18,10 +19,12 @@ const router = createBrowserRouter(
       <Route path="/" element={<Landing />} />
       <Route element={<MainLayout />}>
         <Route path="/login" element={<Login />} />
-        <Route path="/places" element={<Places />}/>
-        <Route path="/hotels" element={<Hotels />}/>
-        <Route path="/trending" element={<Trending/>}/>
-        <Route path="/places/:id" element={<PlaceDetails />} />
+        <Route element={<RequireAuth />}>
+          <Route path="/places" element={<Places />} />
+          <Route path="/hotels" element={<Hotels />} />
+          <Route path="/trending" element={<Trending />} />
+          <Route path="/places/:id" element={<PlaceDetails />} />
+        </Route>
       </Route>
     </Route>
   )

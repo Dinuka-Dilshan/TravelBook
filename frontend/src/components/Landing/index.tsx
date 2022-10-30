@@ -2,22 +2,16 @@ import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../store/hooks";
-import { login } from "../../store/slices/authSlice";
 
 const Landing = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const str = localStorage.getItem("user");
-    if (str) {
-      const user = JSON.parse(str);
-      dispatch(login(user));
-      navigate("/places");
-    } else {
-      navigate("/login");
-    }
+    const timer = setTimeout(() => {
+      navigate("/places", { replace: true });
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
