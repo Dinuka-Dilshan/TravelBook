@@ -80,14 +80,14 @@ export const loginController = async (req, res, next) => {
   let foundUser;
   try {
     foundUser = await User.findOne({ email });
-    foundUser = foundUser._doc;
+    foundUser = foundUser?._doc;
   } catch (error) {
-    return next(ErrorResponse({ code: 404, message: "Email or Password is Incorrect" }));
+    return next(ErrorResponse());
   }
 
   if (!foundUser) {
     return next(
-      ErrorResponse({ code: 404, message: "Credentials seems to be wrong" })
+      ErrorResponse({ code: 401, message: "Credentials seems to be wrong" })
     );
   }
 
@@ -100,7 +100,7 @@ export const loginController = async (req, res, next) => {
   }
 
   if (!isValidUser) {
-    return next(ErrorResponse("un-authorized"));
+    return next(ErrorResponse({ code: 401, message: "Credentials seems to be wrong" }));
   }
 
   jwt.sign(
