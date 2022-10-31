@@ -15,20 +15,9 @@ import ShareIcon from "@mui/icons-material/Share";
 import { useState } from "react";
 import ShareLocation from "../ShareLocation/ShareLocation";
 import { useNavigate } from "react-router-dom";
+import { Place } from "../../models/Place";
 
-interface Props {
-  title: string;
-  description: string;
-  rating: number;
-  id?: number;
-}
-
-const PlaceCard: React.FC<Props> = ({
-  title,
-  description,
-  rating,
-  id = 123,
-}) => {
+const PlaceCard: React.FC<Place> = ({ name, description, _id, photos }) => {
   const [isShareOpen, setIsShareOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -37,26 +26,21 @@ const PlaceCard: React.FC<Props> = ({
   };
 
   const clickHandler = () => {
-    navigate(`/places/${id}`);
+    navigate(`/places/${_id}`);
   };
 
   return (
     <Card>
       {isShareOpen && (
         <ShareLocation
-          link="test link"
+          link={`${window.location.href}/${_id}`}
           onClose={() => {
             setIsShareOpen(false);
           }}
         />
       )}
       <CardActionArea onClick={clickHandler}>
-        <CardMedia
-          component="img"
-          alt=""
-          height="160"
-          src="https://cdn.theculturetrip.com/wp-content/uploads/2017/04/sigiriya-459197_1920.jpg"
-        />
+        <CardMedia component="img" alt="" height="220" src={photos[0]} />
         <CardContent>
           <Box
             display="flex"
@@ -64,9 +48,9 @@ const PlaceCard: React.FC<Props> = ({
             alignItems="center"
           >
             <Typography fontSize="1.5rem" component="div">
-              {title}
+              {name}
             </Typography>
-            <Rating readOnly value={rating} />
+            <Rating readOnly value={5} />
           </Box>
           <Typography>{description}</Typography>
         </CardContent>

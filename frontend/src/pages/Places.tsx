@@ -1,22 +1,32 @@
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { useEffect } from "react";
+import ErrorFS from "../components/ErrorFS";
+import LoaderFS from "../components/LoaderFS";
 import PlaceCard from "../components/Placecard/PlaceCard";
-import { places } from "../dummyData";
+import useFetch from "../hooks/useFetch";
+import { Place } from "../models/Place";
 
 const Places = () => {
+  const { isLoading, data, fetchData, isError, error } = useFetch<Place[]>();
+
+  useEffect(() => {
+    fetchData("place", { method: "GET", useToken: true });
+  }, []);
+
+  if (isError) {
+    return <ErrorFS error={error} />;
+  }
+
   return (
-    <Box px='1rem'>
-      <Grid container px={{xs:2,lg:15}} pt={5} spacing={5}>
-        {places.map((place, index) => (
+    <Box px="1rem">
+      {isLoading && <LoaderFS />}
+      <Grid container px={{ xs: 2, lg: 15 }} pt={5} spacing={5}>
+        {data?.map((place, index) => (
           <Grid item xs={12} lg={4} key={index}>
-            <PlaceCard
-              title={place.title}
-              description={`${place.description.slice(0,100)}...`}
-              rating={place.rating}
-            />
+            <PlaceCard {...place} />
           </Grid>
         ))}
-        
       </Grid>
     </Box>
   );

@@ -1,10 +1,9 @@
+import CloseIcon from "@mui/icons-material/Close";
 import { Card, CardContent, IconButton } from "@mui/material";
 import { Box } from "@mui/system";
-import CloseIcon from "@mui/icons-material/Close";
-import { AnimatePresence } from "framer-motion";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-const Modal = ({ onClose, children, width ,size='350px'}) => {
+const Modal = ({ onClose, children, width, size = "350px" }) => {
   const closeHandler = () => {
     if (typeof onClose === "function") {
       onClose();

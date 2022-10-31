@@ -39,3 +39,18 @@ export const placeValidation = checkSchema({
       },
     },
   });
+
+  export const commentValidation = checkSchema({
+    content:{
+      in:['body'],
+      notEmpty:{
+        errorMessage:'content cannot be empty'
+      },
+    },
+    placeID:{
+      in:['body'],
+      notEmpty:{
+        errorMessage:'place id cannot be empty'
+      }
+    }
+  });
