@@ -17,6 +17,10 @@ const placeSchema = new Schema({
   addedOn: Date,
   comments: [
     {
+      author:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
       time: Date,
       content: String,
     },
