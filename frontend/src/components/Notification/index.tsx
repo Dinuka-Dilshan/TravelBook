@@ -45,7 +45,7 @@ const Notification = () => {
               color="white"
               letterSpacing={"0.1rem"}
             >
-              {notification.message}
+              {notification.message.toString()}
             </Typography>
             <CloseIcon
               sx={{ color: "white" }}
