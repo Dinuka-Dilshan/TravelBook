@@ -1,4 +1,10 @@
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ShareIcon from "@mui/icons-material/Share";
+import StarIcon from "@mui/icons-material/Star";
 import {
+  Avatar,
   Container,
   Grid,
   IconButton,
@@ -6,23 +12,23 @@ import {
   ImageListItem,
   Typography,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Box } from "@mui/system";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
+import { formatRelative, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
-import ShareLocation from "../components/ShareLocation/ShareLocation";
-import StarIcon from "@mui/icons-material/Star";
+import { useParams } from "react-router-dom";
 import AddRating from "../components/AddRating";
-import ViewLocation from "../components/ViewLocation/ViewLocation";
-import useFetch from "../hooks/useFetch";
-import { Place } from "../models/Place";
+import CommentSecton from "../components/CommentSection";
 import ErrorFS from "../components/ErrorFS";
 import LoaderFS from "../components/LoaderFS";
-import CommentSecton from "../components/CommentSection";
-
+import ShareLocation from "../components/ShareLocation/ShareLocation";
+import ViewLocation from "../components/ViewLocation/ViewLocation";
+import useFetch from "../hooks/useFetch";
+import useHelmet from "../hooks/useHelmet";
+import { Place } from "../models/Place";
+import PublicIcon from "@mui/icons-material/Public";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { capitalizeEachFirst } from "../utils/string";
 const srcset = (image: string, size: number, rows = 1, cols = 1) => {
   return {
     src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
@@ -34,6 +40,7 @@ const srcset = (image: string, size: number, rows = 1, cols = 1) => {
 
 const PlaceDetails = () => {
   const { id } = useParams();
+
   const {
     isLoading,
     data: place,
@@ -47,7 +54,7 @@ const PlaceDetails = () => {
     isHeartClicked: false,
     isLocationOpen: false,
   });
-
+  useHelmet(place?.name);
   const shareClickHandler = () => {
     setIconButtonStatus((prev) => ({
       ...prev,
@@ -77,7 +84,7 @@ const PlaceDetails = () => {
   };
 
   useEffect(() => {
-    fetchData(`place/${id}`, { method: "GET", useToken: true });
+    fetchData(`place/${id}`, { method: "GET", type: "authenticated" });
   }, []);
 
   if (isError) {
@@ -85,7 +92,7 @@ const PlaceDetails = () => {
   }
 
   return (
-    <Container sx={{ px: "4rem", pt: "1.5rem" }}>
+    <Container sx={{ px: { lg: "4rem", xs: "1rem" }, pt: "1.5rem" }}>
       {isLoading && <LoaderFS />}
       {iconButtonStatus.isShareOpen && (
         <ShareLocation
@@ -127,11 +134,16 @@ const PlaceDetails = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography fontSize="1.5rem">{place?.name}</Typography>
+            <Typography
+              fontWeight={"bold"}
+              sx={{ fontSize: { lg: "1.5rem", xs: "1.3rem" } }}
+            >
+              {capitalizeEachFirst(place?.name || "")}
+            </Typography>
             <Box
               display="flex"
               justifyContent="space-between"
-              gap={2}
+              sx={{ gap: { lg: 2, xs: 1 } }}
               alignItems="center"
             >
               <IconButton>
@@ -164,18 +176,70 @@ const PlaceDetails = () => {
             >
               {place.photos.map((photo, index) => (
                 <ImageListItem key={index} cols={2} rows={3}>
-                  <img {...srcset(photo, 121, 1, 1)} alt={""} loading="lazy" />
+                  <img {...srcset(photo, 121, 2, 1)} alt={""} loading="lazy" />
                 </ImageListItem>
               ))}
             </ImageList>
           )}
+          <Box
+            display="flex"
+            p={"1rem"}
+            mb="1rem"
+            bgcolor="#DEEFFF"
+            justifyContent={"space-between"}
+            borderRadius={"0.2rem"}
+          >
+            <Box display="flex" alignItems="center" gap={1}>
+              <PublicIcon />
+              <Typography>{place?.country}</Typography>
+            </Box>
+            <Box display="flex" alignItems="center" gap={1}>
+              <ApartmentIcon />
+              <Typography>{place?.state}</Typography>
+            </Box>
+            <Box display="flex" alignItems="center" gap={1}>
+              <LocationOnIcon />
+              <Box display="flex" alignItems="center" gap={2}>
+                <Typography>{place?.latitude}° S</Typography>
+                <Typography>{place?.longitude}° E</Typography>
+              </Box>
+            </Box>
+          </Box>
+          <Box
+            display="flex"
+            p={"1rem"}
+            mb="1rem"
+            bgcolor="#DEEFFF"
+            justifyContent={"space-between"}
+            borderRadius={"0.2rem"}
+          >
+            <Box display="flex" alignItems="center" gap={1}>
+              <Avatar src={place?.addedBy.profilePicture} />
+              <Typography fontWeight={'bold'} fontSize="0.9rem">{place?.addedBy.name}</Typography>
+            </Box>
+            <Box display="flex" alignItems="center" gap={1}>
+              <CalendarMonthIcon />
+              {place?.addedOn && (
+                <Typography fontSize="0.9rem">
+                  {formatRelative(parseISO(place.addedOn), new Date())}
+                </Typography>
+              )}
+            </Box>
+          </Box>
           <Box display="flex" alignItems="center" gap={1} mb="1rem">
             <StarIcon fontSize="small" />
             <Typography fontSize="0.8rem">4.5</Typography>
           </Box>
-          <Typography>{place?.description}</Typography>
+
+          <Typography
+            bgcolor="custom.gray"
+            borderRadius={"0.2rem"}
+            p={"0.7rem"}
+          >
+            {place?.description}
+          </Typography>
         </Grid>
-        <Grid item xs={6} mt="2rem">
+        <Grid item xs={12} lg={6} mt="2rem">
           {place?._id && <CommentSecton placeID={place._id} />}
         </Grid>
       </Grid>
