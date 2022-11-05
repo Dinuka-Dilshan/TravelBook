@@ -1,3 +1,15 @@
+export interface PlaceComment {
+  time: string;
+  content: string;
+  _id: string;
+  author: {
+    _id: string;
+    name: string;
+    email: string;
+    profilePicture: string;
+  };
+}
+
 export interface Place {
   _id: string;
   name: string;
@@ -13,16 +25,6 @@ export interface Place {
     email: string;
     profilePicture: string;
   };
-  addedOn: Date;
-  comments: {
-    time: Date;
-    content: string;
-    _id: string;
-    author: {
-      _id: string;
-      name: string;
-      email: string;
-      profilePicture: string;
-    };
-  }[];
+  addedOn: string;
+  comments: PlaceComment[];
 }

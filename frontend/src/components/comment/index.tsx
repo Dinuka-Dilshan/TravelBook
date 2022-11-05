@@ -25,7 +25,7 @@ const Comment: React.FC<Props> = ({ placeID, refetch }) => {
         content: comment,
       },
       method: "POST",
-      useToken: true,
+      type: "authenticated",
     });
     setComment("");
   };

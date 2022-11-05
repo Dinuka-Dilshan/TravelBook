@@ -6,13 +6,7 @@ import ErrorResponse, { getErrorMessages } from "../../utils/ErrorResponse.js";
 import User from "../../Models/User.js";
 
 export const signUpController = async (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return next(
-      ErrorResponse({ code: 406, message: getErrorMessages(errors.array()) })
-    );
-  }
+  ValidationErrorResponse(req, next);
 
   const {
     name,
@@ -68,13 +62,8 @@ export const signUpController = async (req, res, next) => {
 };
 
 export const loginController = async (req, res, next) => {
-  const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    return next(
-      ErrorResponse({ code: 406, message: getErrorMessages(errors.array()) })
-    );
-  }
+  ValidationErrorResponse(req, next);
 
   const { email, password } = req.body;
   let foundUser;
@@ -124,8 +113,4 @@ export const loginController = async (req, res, next) => {
   );
 };
 
-export const protectedRoute = async (req, res, next) => {
-  res.json({
-    id: req.user.id,
-  });
-};
+

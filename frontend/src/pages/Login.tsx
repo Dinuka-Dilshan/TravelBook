@@ -33,6 +33,7 @@ const Login = () => {
     fields: {
       email: {
         value: "",
+        errorMessage: "Invalid Email",
         isValid: false,
         validators: [
           { validator: (val) => isEmail(val), errorMessage: "Invalid Email" },
@@ -42,6 +43,7 @@ const Login = () => {
       password: {
         value: "",
         isValid: false,
+        errorMessage: "Invalid Password",
         validators: [
           {
             validator: (val) => !isEmpty(val),
@@ -67,7 +69,7 @@ const Login = () => {
           email: field("email").value,
           password: field("password").value,
         },
-        useToken: false,
+        type:'normal',
         method: "POST",
       });
     }
@@ -79,7 +81,7 @@ const Login = () => {
       navigate("/places", { replace: true });
     }
   }, [data]);
-
+  console.log(state);
   return (
     <Grid container justifyContent="center" alignItems="center" height={"92vh"}>
       <Grid

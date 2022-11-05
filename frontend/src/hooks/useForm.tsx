@@ -6,7 +6,7 @@ type Validator = {
 };
 
 type FormField = {
-  value: string;
+  value: string ;
   isValid: boolean;
   validators: Validator[];
   isTouched: boolean;
@@ -20,13 +20,20 @@ type FormState = {
   };
 };
 
-type Action = {
-  type: "INPUT_CHANGE" | "INPUT_TOUCHED";
-  payload: {
-    key: string;
-    value: string;
-  };
-};
+type Action =
+  | {
+      type: "INPUT_CHANGE" | "INPUT_TOUCHED";
+      payload: {
+        key: string;
+        value: string;
+      };
+    }
+  | {
+      type: "RESET";
+      payload: {
+        value: FormState;
+      };
+    };
 
 const runValidators = (validators: Validator[], value: string) => {
   let message = "";
@@ -62,7 +69,9 @@ const reducer = (state: FormState, action: Action) => {
             ...changedField,
             isValid: validatorOutput.isFieldValid,
             value: action.payload.value,
-            errorMessage: validatorOutput.message,
+            errorMessage:
+              validatorOutput.message ||
+              state.fields[action.payload.key].errorMessage,
           },
         },
       };
@@ -73,6 +82,8 @@ const reducer = (state: FormState, action: Action) => {
         isValid: state.isValid,
         fields: { ...state.fields, [action.payload.key]: touchedField },
       };
+    case "RESET":
+      return action.payload.value;
     default:
       return state;
   }
@@ -101,6 +112,15 @@ const useForm = (initialState: FormState) => {
     });
   }, []);
 
+  const resetHandler = useCallback(() => {
+    dispatch({
+      type: "RESET",
+      payload: {
+        value: initialState,
+      },
+    });
+  }, []);
+
   const field = useCallback(
     (key: string) => {
       return state.fields[key];
@@ -108,7 +128,7 @@ const useForm = (initialState: FormState) => {
     [state.fields]
   );
 
-  return { state, inputHandler, field, touchHandler };
+  return { state, inputHandler, field, touchHandler, resetHandler };
 };
 
 export default useForm;

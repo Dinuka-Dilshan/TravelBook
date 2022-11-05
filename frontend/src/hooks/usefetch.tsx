@@ -12,27 +12,35 @@ const useFetch = <T extends any>() => {
   const user = useAppSelector(selectUser);
   const dispatch = useDispatch();
 
+  const HEADER_TYPES = {
+    normal: {
+      "content-type": "application/json",
+    },
+    authenticated: {
+      "content-type": "application/json",
+      authorization: `barer ${user.token}`,
+    },
+    file: {
+      authorization: `barer ${user.token}`,
+    },
+  };
+
   const fetchData = useCallback(
     (
       url: string,
       options: {
         body?: any;
         method: "POST" | "GET" | "DELETE";
-        useToken: boolean;
+        type: keyof typeof HEADER_TYPES;
+        autoErrorNotify?: boolean;
       }
     ) => {
       setIsLoading(true);
       fetch(`${process.env.REACT_APP_API_BASE_URL}/${url}`, {
         method: options.method,
-        headers: options.useToken
-          ? {
-              "content-type": "application/json",
-              authorization: `barer ${user.token}`,
-            }
-          : {
-              "content-type": "application/json",
-            },
-        body: JSON.stringify(options.body),
+        headers: HEADER_TYPES[options.type],
+        body:
+          options.type === "file" ? options.body : JSON.stringify(options.body),
       })
         .then((response) => {
           if (response.ok) {
@@ -46,14 +54,20 @@ const useFetch = <T extends any>() => {
         .catch((response) => {
           response.json().then((json: any) => {
             setError(json.message);
-            dispatch(notify({ message: json.message, type: "ERROR" }));
+            if (options.autoErrorNotify) {
+              dispatch(notify({ message: json.message, type: "ERROR" }));
+            }
           });
           setIsError(true);
         })
         .catch(() => {
           setIsError(true);
           setError("Unknown Error Occured");
-          dispatch(notify({ message: "Unknown Error Occured", type: "ERROR" }));
+          if (options.autoErrorNotify) {
+            dispatch(
+              notify({ message: "Unknown Error Occured", type: "ERROR" })
+            );
+          }
         })
         .finally(() => {
           setIsLoading(false);
