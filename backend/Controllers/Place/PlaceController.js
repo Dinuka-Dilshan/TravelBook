@@ -43,13 +43,7 @@ export const getPlaceByID = async (req, res, next) => {
 };
 
 export const addPlace = async (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return next(
-      ErrorResponse({ code: 406, message: getErrorMessages(errors.array()) })
-    );
-  }
+  ValidationErrorResponse(req, next);
 
   const { name, description, state, country, latitude, longitude } = req.body;
   const { id } = req.user;
@@ -59,7 +53,7 @@ export const addPlace = async (req, res, next) => {
   } catch (error) {
     return next(ErrorResponse({ code: 415, message: error }));
   }
-  
+
   try {
     const newPlace = new Place({
       name,
@@ -76,19 +70,13 @@ export const addPlace = async (req, res, next) => {
     const savedPlace = await newPlace.save();
     res.json(savedPlace);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return next(ErrorResponse());
   }
 };
 
 export const addComment = async (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return next(
-      ErrorResponse({ code: 406, message: getErrorMessages(errors.array()) })
-    );
-  }
+  ValidationErrorResponse(req, next);
 
   const email = req.user.email;
   const { content, placeID } = req.body;
@@ -123,13 +111,7 @@ export const addComment = async (req, res, next) => {
 };
 
 export const deleteComment = async (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return next(
-      ErrorResponse({ code: 406, message: getErrorMessages(errors.array()) })
-    );
-  }
+  ValidationErrorResponse(req, next);
   const userID = req.user.id;
   const { commentID, placeID } = req.body;
   try {
