@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Landing from "./components/Landing";
 import RequireAuth from "./components/RequireAuth/RequireAuth";
+import AddPlace from "./pages/AddPlace";
 import Hotels from "./pages/Hotels";
 import Login from "./pages/Login";
 import MainLayout from "./pages/MainLayout";
@@ -21,6 +22,7 @@ const router = createBrowserRouter(
         <Route path="/login" element={<Login />} />
         <Route element={<RequireAuth />}>
           <Route path="/places" element={<Places />} />
+          <Route path="/addplace" element={<AddPlace />} />
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/trending" element={<Trending />} />
           <Route path="/places/:id" element={<PlaceDetails />} />
