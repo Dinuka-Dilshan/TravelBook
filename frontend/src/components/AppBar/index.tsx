@@ -31,11 +31,11 @@ const AppBar = () => {
     dispatch(logout());
     navigate("/login");
     setIsConfirmOpen(false);
-  },[]);
+  }, []);
 
   const notOkHandler = useCallback(() => {
     setIsConfirmOpen(false);
-  },[]);
+  }, []);
 
   return (
     <Box
@@ -61,6 +61,10 @@ const AppBar = () => {
         color="white"
         fontWeight={"bold"}
         letterSpacing={2}
+        onClick={() => {
+          navigate("/places");
+        }}
+        sx={{ cursor: "pointer" }}
       >
         TravelMate
       </Typography>
