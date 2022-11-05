@@ -1,7 +1,11 @@
 import { validationResult } from "express-validator";
+import mongoose from "mongoose";
+
 import Place from "../../Models/Place.js";
 import User from "../../Models/User.js";
 import ErrorResponse, { getErrorMessages } from "../../utils/ErrorResponse.js";
+import { uploadFile } from "../../utils/File.js";
+import ValidationErrorResponse from "../../utils/ValidationErrorResponse.js";
 
 export const getAllPlaces = async (req, res, next) => {
   try {
@@ -49,7 +53,13 @@ export const addPlace = async (req, res, next) => {
 
   const { name, description, state, country, latitude, longitude } = req.body;
   const { id } = req.user;
-
+  let imageUrl;
+  try {
+    imageUrl = await uploadFile(req.file);
+  } catch (error) {
+    return next(ErrorResponse({ code: 415, message: error }));
+  }
+  
   try {
     const newPlace = new Place({
       name,
@@ -60,11 +70,13 @@ export const addPlace = async (req, res, next) => {
       longitude,
       addedBy: id,
       addedOn: new Date(),
+      photos: [imageUrl],
     });
 
     const savedPlace = await newPlace.save();
     res.json(savedPlace);
   } catch (error) {
+    console.log(error)
     return next(ErrorResponse());
   }
 };
@@ -111,35 +123,63 @@ export const addComment = async (req, res, next) => {
 };
 
 export const deleteComment = async (req, res, next) => {
-  
-  // const userID = req.user.id;
-  // const { id: commentID } = req.params;
-  // let user, place;
+  const errors = validationResult(req);
 
-  // try {
-  //   user = await User.findById(userID)
-  //   place = await Place.find({comments:{}});
-  // } catch (error) {
-  //   return next(ErrorResponse({ code: 404, message: "Place not found" }));
-  // }
+  if (!errors.isEmpty()) {
+    return next(
+      ErrorResponse({ code: 406, message: getErrorMessages(errors.array()) })
+    );
+  }
+  const userID = req.user.id;
+  const { commentID, placeID } = req.body;
+  try {
+    const response = await Place.updateOne(
+      { _id: placeID },
+      {
+        $pull: {
+          comments: {
+            _id: commentID,
+            author: mongoose.Types.ObjectId(userID),
+          },
+        },
+      }
+    );
+    res.json({
+      isDeleted: response.modifiedCount > 0,
+    });
+  } catch (error) {
+    return next(ErrorResponse());
+  }
+};
 
-  // try {
-  //   place.comments.push({
-  //     author: user.id,
-  //     content,
-  //     time: new Date().toISOString(),
-  //   });
-  //   const updatedPlace = await place.save();
-  //   await updatedPlace.populate({
-  //     path: "comments.author",
-  //     select: ["name", "email", "profilePicture"],
-  //   });
-  //   await updatedPlace.populate({
-  //     path: "addedBy",
-  //     select: ["name", "email", "profilePicture"],
-  //   });
-  //   res.json(updatedPlace);
-  // } catch (error) {
-  //   return next(ErrorResponse());
-  // }
+export const addPlacePhoto = async (req, res, next) => {
+  ValidationErrorResponse(req, next);
+
+  const { placeID } = req.body;
+
+  let place;
+
+  try {
+    place = await Place.findById(placeID);
+    if (!place) {
+      return next(ErrorResponse({ code: 404, message: "place not found" }));
+    }
+  } catch (error) {
+    return next(ErrorResponse());
+  }
+
+  let url;
+  try {
+    url = await uploadFile(req.file);
+  } catch (error) {
+    return next(ErrorResponse({ code: 415, message: error }));
+  }
+
+  try {
+    place.photos.push(url);
+    const updatedPlace = await place.save();
+    res.json(updatedPlace);
+  } catch (error) {
+    return next(ErrorResponse());
+  }
 };
