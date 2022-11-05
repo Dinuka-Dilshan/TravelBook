@@ -1,4 +1,4 @@
-import { Box, LinearProgress, Typography } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import Message from "../Message/Message";
 import Comment from "../comment";
 import useFetch from "../../hooks/useFetch";
@@ -16,24 +16,22 @@ const CommentSecton: React.FC<Props> = ({ placeID }) => {
   const reFetchData = () => setFetch((p) => !p);
 
   useEffect(() => {
-    fetchData(`place/${placeID}`, { method: "GET", useToken: true });
+    fetchData(`place/${placeID}`, { method: "GET", type:"authenticated" });
   }, [fetch]);
 
   return (
     <>
-      {isLoading && <LinearProgress/>}
+      {isLoading && <LinearProgress />}
       <Box
         sx={{ overflowY: "hidden", "&:hover": { overflowY: "scroll" } }}
         height={525}
       >
         {place?.comments.map((comment, index) => (
           <Message
+            {...comment}
+            placeID={placeID}
             key={index}
-            time={comment.time}
-            likeCount={5}
-            image={comment.author.profilePicture}
-            comment={comment.content}
-            name={comment.author.name}
+            refetch={reFetchData}
           />
         ))}
       </Box>
