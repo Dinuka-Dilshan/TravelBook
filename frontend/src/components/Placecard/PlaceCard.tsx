@@ -16,6 +16,7 @@ import { useState } from "react";
 import ShareLocation from "../ShareLocation/ShareLocation";
 import { useNavigate } from "react-router-dom";
 import { Place } from "../../models/Place";
+import { capitalizeEachFirst } from "../../utils/string";
 
 const PlaceCard: React.FC<Place> = ({ name, description, _id, photos }) => {
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -48,7 +49,7 @@ const PlaceCard: React.FC<Place> = ({ name, description, _id, photos }) => {
             alignItems="center"
           >
             <Typography fontSize="1.5rem" component="div">
-              {name}
+              {capitalizeEachFirst(name)}
             </Typography>
             <Rating readOnly value={5} />
           </Box>
