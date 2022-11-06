@@ -1,7 +1,5 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect } from "react";
-import message from "../../assets/music";
 
 interface Props {
   onConfirmOk: () => void;
@@ -9,10 +7,6 @@ interface Props {
 }
 
 const Confirm: React.FC<Props> = ({ onConfirmNotOk, onConfirmOk }) => {
-  useEffect(() => {
-    new Audio(message).play();
-  }, []);
-
   return (
     <Box
       zIndex={1000}
