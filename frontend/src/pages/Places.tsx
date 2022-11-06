@@ -24,7 +24,7 @@ const Places = () => {
   }
 
   return (
-    <Box px="1rem">
+    <Box px="1rem" mb='2rem'>
       {isLoading && <LoaderFS />}
       <Tooltip title={"Add Place"}>
         <Fab
@@ -36,7 +36,7 @@ const Places = () => {
           <AddIcon />
         </Fab>
       </Tooltip>
-      <Grid container px={{ xs: 2, lg: 15 }} pt={5} spacing={5}>
+      <Grid container px={{ xs: 0, lg: 15 }} pt={5} spacing={5}>
         {data?.map((place, index) => (
           <Grid item xs={12} lg={4} key={index}>
             <PlaceCard {...place} />
