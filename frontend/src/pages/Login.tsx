@@ -69,8 +69,9 @@ const Login = () => {
           email: field("email").value,
           password: field("password").value,
         },
-        type:'normal',
+        type: "normal",
         method: "POST",
+        autoErrorNotify: true,
       });
     }
   };
@@ -81,7 +82,6 @@ const Login = () => {
       navigate("/places", { replace: true });
     }
   }, [data]);
-  console.log(state);
   return (
     <Grid container justifyContent="center" alignItems="center" height={"92vh"}>
       <Grid
@@ -185,6 +185,9 @@ const Login = () => {
           }}
         />
         <Typography
+          onClick={() => {
+            navigate("/join", { replace: true });
+          }}
           textAlign="center"
           fontSize="0.7rem"
           color="custom.fontGray"
