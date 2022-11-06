@@ -53,25 +53,6 @@ export default checkSchema({
       errorMessage: "gender must be male,female or other",
     },
   },
-  userType: {
-    in: ["body"],
-    notEmpty: {
-      errorMessage: "userType cannot be empty",
-    },
-    custom: {
-      options: (value) => {
-        if (
-          value === "admin" ||
-          value === "normalUser" ||
-          value === "businessUser"
-        ) {
-          return true;
-        }
-        return false;
-      },
-      errorMessage: "userType must be admin, normalUser or businessUser",
-    },
-  },
   state: {
     in: ["body"],
     notEmpty: {
@@ -84,10 +65,10 @@ export default checkSchema({
       errorMessage: "country cannot be empty",
     },
   },
-  profilePicture: {
+  bio: {
     in: ["body"],
     notEmpty: {
-      errorMessage: "profilePicture cannot be empty",
+      errorMessage: "bio cannot be empty",
     },
   },
 });
@@ -109,3 +90,24 @@ export const userLoginValidation = checkSchema({
     },
   },
 });
+
+
+// userType: {
+//   in: ["body"],
+//   notEmpty: {
+//     errorMessage: "userType cannot be empty",
+//   },
+//   custom: {
+//     options: (value) => {
+//       if (
+//         value === "admin" ||
+//         value === "normalUser" ||
+//         value === "businessUser"
+//       ) {
+//         return true;
+//       }
+//       return false;
+//     },
+//     errorMessage: "userType must be admin, normalUser or businessUser",
+//   },
+// },
