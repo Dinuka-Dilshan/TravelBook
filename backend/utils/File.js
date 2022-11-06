@@ -1,3 +1,5 @@
+import * as dotenv from "dotenv";
+dotenv.config();
 import { initializeApp } from "firebase/app";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
@@ -10,6 +12,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.Firebase_messagingSenderId,
   appId: process.env.Firebase_appId,
 };
+
 
 const MIME_TYPES = {
   "image/png": "png",

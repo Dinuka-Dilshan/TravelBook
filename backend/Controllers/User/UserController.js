@@ -1,26 +1,28 @@
 import bycrypt from "bcrypt";
-import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
-
-import ErrorResponse, { getErrorMessages } from "../../utils/ErrorResponse.js";
+import { USER_TYPES } from "../../constants/index.js";
+import Place from "../../Models/Place.js";
 import User from "../../Models/User.js";
+import ErrorResponse from "../../utils/ErrorResponse.js";
+import { uploadFile } from "../../utils/File.js";
+import ValidationErrorResponse from "../../utils/ValidationErrorResponse.js";
 
 export const signUpController = async (req, res, next) => {
   ValidationErrorResponse(req, next);
 
-  const {
-    name,
-    email,
-    password,
-    birthDate,
-    gender,
-    profilePicture,
-    userType,
-    state,
-    country,
-  } = req.body;
+  const { name, email, password, birthDate, gender, state, country, bio } =
+    req.body;
 
   let hashedPassword;
+
+  let imageUrl;
+
+  try {
+    imageUrl = await uploadFile(req.file);
+  } catch (error) {
+    console.log(error);
+    return next(ErrorResponse({ code: 415, message: error }));
+  }
 
   try {
     const availableUser = await User.findOne({ email });
@@ -46,12 +48,13 @@ export const signUpController = async (req, res, next) => {
       email,
       birthDate,
       gender,
-      profilePicture,
-      userType,
+      profilePicture: imageUrl,
+      userType: USER_TYPES.normalUser,
       state,
       country,
       joinedDate: new Date(),
       password: hashedPassword,
+      bio,
     });
     const savedUser = await newUser.save();
     const { _id, viewRecords, __v, password, ...rest } = savedUser._doc;
@@ -62,7 +65,6 @@ export const signUpController = async (req, res, next) => {
 };
 
 export const loginController = async (req, res, next) => {
-
   ValidationErrorResponse(req, next);
 
   const { email, password } = req.body;
@@ -89,7 +91,9 @@ export const loginController = async (req, res, next) => {
   }
 
   if (!isValidUser) {
-    return next(ErrorResponse({ code: 401, message: "Credentials seems to be wrong" }));
+    return next(
+      ErrorResponse({ code: 401, message: "Credentials seems to be wrong" })
+    );
   }
 
   jwt.sign(
@@ -113,4 +117,17 @@ export const loginController = async (req, res, next) => {
   );
 };
 
+export const getUserDetailsController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id, { password: 0 }).exec();
+    const places = await Place.find({ addedBy: id }).exec();
+    if (!user) {
+      return next(ErrorResponse({ code: 404, message: "user not found" }));
+    }
 
+    res.json({ user, places });
+  } catch (error) {
+    return next(ErrorResponse());
+  }
+};

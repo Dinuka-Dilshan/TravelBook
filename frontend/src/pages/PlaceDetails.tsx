@@ -1,10 +1,10 @@
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ShareIcon from "@mui/icons-material/Share";
 import StarIcon from "@mui/icons-material/Star";
 import {
-  Avatar,
   Container,
   Grid,
   IconButton,
@@ -17,17 +17,17 @@ import { formatRelative, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AddRating from "../components/AddRating";
+import AvatarLink from "../components/Avatar";
 import CommentSecton from "../components/CommentSection";
 import ErrorFS from "../components/ErrorFS";
 import LoaderFS from "../components/LoaderFS";
+import ViewLocation from "../components/Location";
+import ImageUpload from "../components/PlaceImageUpload";
+import PlaceLocationDetailsCard from "../components/PlaceLocationDetailsCard";
 import ShareLocation from "../components/ShareLocation/ShareLocation";
-import ViewLocation from "../components/ViewLocation/ViewLocation";
 import useFetch from "../hooks/useFetch";
 import useHelmet from "../hooks/useHelmet";
 import { Place } from "../models/Place";
-import PublicIcon from "@mui/icons-material/Public";
-import ApartmentIcon from "@mui/icons-material/Apartment";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { capitalizeEachFirst } from "../utils/string";
 const srcset = (image: string, size: number, rows = 1, cols = 1) => {
   return {
@@ -53,39 +53,26 @@ const PlaceDetails = () => {
     isRaingOpen: false,
     isHeartClicked: false,
     isLocationOpen: false,
+    isAddPhotoOpen: false,
   });
+
+  const [refetch, setRefetch] = useState(false);
   useHelmet(place?.name);
-  const shareClickHandler = () => {
-    setIconButtonStatus((prev) => ({
-      ...prev,
-      isShareOpen: !prev.isShareOpen,
-    }));
+
+  const iconButtonClickhandler = (key: keyof typeof iconButtonStatus) => {
+    setIconButtonStatus((prev) => {
+      return {
+        ...prev,
+        [key]: !prev[key],
+      };
+    });
   };
 
-  const heartClickHandler = () => {
-    setIconButtonStatus((prev) => ({
-      ...prev,
-      isHeartClicked: !prev.isHeartClicked,
-    }));
-  };
-
-  const ratingClickHandler = () => {
-    setIconButtonStatus((prev) => ({
-      ...prev,
-      isRaingOpen: !prev.isRaingOpen,
-    }));
-  };
-
-  const locationClickHandler = () => {
-    setIconButtonStatus((prev) => ({
-      ...prev,
-      isLocationOpen: !prev.isLocationOpen,
-    }));
-  };
+  const refetchPlaceDetails = () => setRefetch((p) => !p);
 
   useEffect(() => {
     fetchData(`place/${id}`, { method: "GET", type: "authenticated" });
-  }, []);
+  }, [refetch]);
 
   if (isError) {
     return <ErrorFS error={error} />;
@@ -125,6 +112,19 @@ const PlaceDetails = () => {
               isLocationOpen: false,
             }));
           }}
+          location={{
+            lat: place?.latitude || 0,
+            lng: place?.longitude || 0,
+          }}
+        />
+      )}
+
+      {iconButtonStatus.isAddPhotoOpen && (
+        <ImageUpload
+          onClose={() => iconButtonClickhandler("isAddPhotoOpen")}
+          placeName={place?.name || ""}
+          placeID={place?._id || ""}
+          onSuccess={refetchPlaceDetails}
         />
       )}
       <Grid container mb="2rem">
@@ -146,41 +146,53 @@ const PlaceDetails = () => {
               sx={{ gap: { lg: 2, xs: 1 } }}
               alignItems="center"
             >
-              <IconButton>
+              <IconButton
+                onClick={() => iconButtonClickhandler("isAddPhotoOpen")}
+              >
                 <AddAPhotoIcon />
               </IconButton>
-              <IconButton onClick={locationClickHandler}>
+              <IconButton
+                onClick={() => iconButtonClickhandler("isLocationOpen")}
+              >
                 <LocationOnIcon />
               </IconButton>
-              <IconButton onClick={heartClickHandler}>
+              <IconButton
+                onClick={() => iconButtonClickhandler("isHeartClicked")}
+              >
                 <FavoriteIcon
                   sx={{
                     color: iconButtonStatus.isHeartClicked ? "#FF5D7A" : "",
                   }}
                 />
               </IconButton>
-              <IconButton onClick={ratingClickHandler}>
+              <IconButton onClick={() => iconButtonClickhandler("isRaingOpen")}>
                 <StarIcon />
               </IconButton>
-              <IconButton onClick={shareClickHandler}>
+              <IconButton onClick={() => iconButtonClickhandler("isShareOpen")}>
                 <ShareIcon />
               </IconButton>
             </Box>
           </Box>
           {place && (
             <ImageList
-              sx={{ width: "100%", height: 500 }}
+              sx={{ width: "100%", maxHeight: 500 }}
               variant="quilted"
               cols={4}
               rowHeight={121}
             >
               {place.photos.map((photo, index) => (
-                <ImageListItem key={index} cols={2} rows={3}>
+                <ImageListItem key={index} cols={4} rows={4}>
                   <img {...srcset(photo, 121, 2, 1)} alt={""} loading="lazy" />
                 </ImageListItem>
               ))}
             </ImageList>
           )}
+          <PlaceLocationDetailsCard
+            country={place?.country || ""}
+            state={place?.state || ""}
+            longitude={place?.longitude || 0}
+            latitude={place?.latitude || 0}
+          />
           <Box
             display="flex"
             p={"1rem"}
@@ -190,32 +202,14 @@ const PlaceDetails = () => {
             borderRadius={"0.2rem"}
           >
             <Box display="flex" alignItems="center" gap={1}>
-              <PublicIcon />
-              <Typography>{place?.country}</Typography>
-            </Box>
-            <Box display="flex" alignItems="center" gap={1}>
-              <ApartmentIcon />
-              <Typography>{place?.state}</Typography>
-            </Box>
-            <Box display="flex" alignItems="center" gap={1}>
-              <LocationOnIcon />
-              <Box display="flex" alignItems="center" gap={2}>
-                <Typography>{place?.latitude}° S</Typography>
-                <Typography>{place?.longitude}° E</Typography>
-              </Box>
-            </Box>
-          </Box>
-          <Box
-            display="flex"
-            p={"1rem"}
-            mb="1rem"
-            bgcolor="#DEEFFF"
-            justifyContent={"space-between"}
-            borderRadius={"0.2rem"}
-          >
-            <Box display="flex" alignItems="center" gap={1}>
-              <Avatar src={place?.addedBy.profilePicture} />
-              <Typography fontWeight={'bold'} fontSize="0.9rem">{place?.addedBy.name}</Typography>
+              <AvatarLink
+                image={place?.addedBy.profilePicture || ""}
+                userID={place?.addedBy._id || ""}
+                name={place?.addedBy.name || ""}
+              />
+              <Typography fontWeight={"bold"} fontSize="0.9rem">
+                {place?.addedBy.name}
+              </Typography>
             </Box>
             <Box display="flex" alignItems="center" gap={1}>
               <CalendarMonthIcon />

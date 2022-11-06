@@ -3,11 +3,23 @@ import { Card, CardContent, IconButton } from "@mui/material";
 import { Box } from "@mui/system";
 import { AnimatePresence, motion } from "framer-motion";
 
-const Modal = ({ onClose, children, width, size = "350px" }) => {
+interface Props {
+  onClose: () => void;
+  children: React.ReactNode;
+  width: string | number;
+  size?: string;
+  height?: string;
+}
+
+const Modal: React.FC<Props> = ({
+  onClose,
+  children,
+  width,
+  size = "350px",
+  height,
+}) => {
   const closeHandler = () => {
-    if (typeof onClose === "function") {
-      onClose();
-    }
+    onClose();
   };
 
   return (
@@ -49,7 +61,7 @@ const Modal = ({ onClose, children, width, size = "350px" }) => {
               <CloseIcon sx={{ fontSize: "0.8rem" }} />
             </IconButton>
           </Box>
-          <CardContent sx={{ p: 0, width }}>{children}</CardContent>
+          <CardContent sx={{ p: 0, width, height }}>{children}</CardContent>
         </Card>
       </Box>
     </AnimatePresence>

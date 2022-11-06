@@ -17,7 +17,7 @@ export interface Place {
   state: string;
   country: string;
   latitude: number;
-  longitude: string;
+  longitude: number;
   photos: string[];
   addedBy: {
     _id: string;

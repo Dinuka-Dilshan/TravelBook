@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CountryInput from "../components/CountryInput";
 import FilePicker from "../components/FilePicker";
+import LocationPicker from "../components/Location/LocationPicker";
 import useFetch from "../hooks/useFetch";
 import useForm from "../hooks/useForm";
 import { Place } from "../models/Place";
@@ -42,30 +43,6 @@ const AddPlace = () => {
         isTouched: false,
         errorMessage: "Descripton cannot be empty",
       },
-      latitude: {
-        value: "",
-        isValid: false,
-        validators: [
-          {
-            validator: (val) => val.length > 0,
-            errorMessage: "Latitude cannot be empty",
-          },
-        ],
-        isTouched: false,
-        errorMessage: "Latitude cannot be empty",
-      },
-      longitude: {
-        value: "",
-        isValid: false,
-        validators: [
-          {
-            validator: (val) => val.length > 0,
-            errorMessage: "Longitude cannot be empty",
-          },
-        ],
-        isTouched: false,
-        errorMessage: "Longitude cannot be empty",
-      },
       state: {
         value: "",
         isValid: false,
@@ -95,6 +72,12 @@ const AddPlace = () => {
 
   const { data, error, fetchData, isError, isLoading } = useFetch<Place>();
   const [image, setImage] = useState<File>();
+  const [location, setLocation] = useState({ lat: 6.9271, lng: 79.8612 });
+  const [isLocationSet, setIsLocationSet] = useState({
+    isSet: false,
+    isBlur: false,
+  });
+
   const navigate = useNavigate();
   const handleReset = () => {
     setImage(undefined);
@@ -102,14 +85,14 @@ const AddPlace = () => {
   };
 
   const handleAddPlace = () => {
-    if (state.isValid) {
+    if (state.isValid && isLocationSet.isSet) {
       const formData = new FormData();
       formData.set("name", field("name").value);
       formData.set("description", field("description").value);
       formData.set("country", field("country").value);
       formData.set("state", field("state").value);
-      formData.set("latitude", field("latitude").value);
-      formData.set("longitude", field("longitude").value);
+      formData.set("latitude", String(location.lat));
+      formData.set("longitude", String(location.lng));
       formData.append("placeImage", image as Blob);
       fetchData("place", {
         method: "POST",
@@ -143,7 +126,7 @@ const AddPlace = () => {
           }}
           size="small"
           fullWidth
-          sx={{ mt: "1rem" }}
+          sx={{ my: "1rem" }}
           placeholder="Name"
           label="Name"
         />
@@ -197,52 +180,33 @@ const AddPlace = () => {
             {field("description").errorMessage}
           </Typography>
         )}
+        <LocationPicker
+          onSelect={() =>
+            setIsLocationSet((prev) => ({ ...prev, isSet: true }))
+          }
+          onBlur={() => setIsLocationSet((prev) => ({ ...prev, isBlur: true }))}
+          onClick={(coods) => {
+            setLocation((prev) => {
+              if (coods?.lat && coods?.lng) {
+                return { lat: coods.lat, lng: coods.lng };
+              }
+              return prev;
+            });
+          }}
+          location={location}
+        />
+        {!isLocationSet.isSet && isLocationSet.isBlur && (
+          <Typography pt="0.5rem" color={"custom.red"}>
+            Please select the location - click to select
+          </Typography>
+        )}
         <FilePicker
           onSelect={(file) => {
             setImage(file);
           }}
           file={image}
         />
-        <TextField
-          type={"number"}
-          value={field("latitude").value}
-          onChange={(e) => {
-            inputHandler("latitude", e.target.value);
-          }}
-          onBlur={() => {
-            touchHandler("latitude");
-          }}
-          size="small"
-          fullWidth
-          sx={{ mt: "1rem" }}
-          placeholder="Latitude"
-          label="Latitude"
-        />
-        {!field("latitude").isValid && field("latitude").isTouched && (
-          <Typography pt="0.5rem" color={"custom.red"}>
-            {field("latitude").errorMessage}
-          </Typography>
-        )}
-        <TextField
-          type={"number"}
-          value={field("longitude").value}
-          onChange={(e) => {
-            inputHandler("longitude", e.target.value);
-          }}
-          onBlur={() => {
-            touchHandler("longitude");
-          }}
-          size="small"
-          fullWidth
-          sx={{ mt: "1rem" }}
-          placeholder="Longitude"
-          label="Longitude"
-        />
-        {!field("longitude").isValid && field("longitude").isTouched && (
-          <Typography pt="0.5rem" color={"custom.red"}>
-            {field("longitude").errorMessage}
-          </Typography>
-        )}
+
         <Button
           sx={{ mt: "2rem", mr: "1rem", width: "25%" }}
           variant="contained"
@@ -251,7 +215,7 @@ const AddPlace = () => {
           Clear
         </Button>
         <Button
-          disabled={!state.isValid || isLoading}
+          disabled={!state.isValid || isLoading || !isLocationSet.isSet}
           onClick={handleAddPlace}
           sx={{ mt: "2rem", width: "25%" }}
           color={"success"}

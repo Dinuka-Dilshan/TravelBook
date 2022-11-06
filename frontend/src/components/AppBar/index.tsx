@@ -1,12 +1,13 @@
+import LogoutIcon from "@mui/icons-material/Logout";
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store/hooks";
 import { logout, selectUser } from "../../store/slices/authSlice";
-import LogoutIcon from "@mui/icons-material/Logout";
+import AvatarLink from "../Avatar";
 import Confirm from "../Confirm";
-import { useCallback, useState } from "react";
 const AppBar = () => {
   const user = useAppSelector(selectUser);
   const dispatch = useDispatch();
@@ -92,6 +93,13 @@ const AppBar = () => {
         >
           Trending
         </NavLink>
+        {user._id && (
+          <AvatarLink
+            image={user.profilePicture || ""}
+            userID={user._id || ""}
+            name={""}
+          />
+        )}
         {Boolean(user._id) ? (
           <Button
             onClick={() => {
