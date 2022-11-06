@@ -23,6 +23,7 @@ const Notification = () => {
         return (
           <Box
             key={index}
+            zIndex={25000}
             position={"fixed"}
             top={`${10 + index * 10}%`}
             left="50%"
