@@ -35,6 +35,8 @@ type Action =
       };
     };
 
+
+
 const runValidators = (validators: Validator[], value: string) => {
   let message = "";
   let isFieldValid = true;
@@ -122,7 +124,7 @@ const useForm = (initialState: FormState) => {
   }, []);
 
   const field = useCallback(
-    (key: string) => {
+    (key: keyof typeof state.fields) => {
       return state.fields[key];
     },
     [state.fields]
