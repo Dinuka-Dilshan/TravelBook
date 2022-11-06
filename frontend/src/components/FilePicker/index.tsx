@@ -7,9 +7,11 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 interface Props {
   onSelect: (file: File) => void;
   file: File | undefined;
+  title?: string;
+  gap?: string;
 }
 
-const FilePicker: React.FC<Props> = ({ onSelect, file }) => {
+const FilePicker: React.FC<Props> = ({ onSelect, file, title, gap }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -44,7 +46,7 @@ const FilePicker: React.FC<Props> = ({ onSelect, file }) => {
           cursor: "pointer",
         }}
         p={"1rem"}
-        mt="1rem"
+        mt={gap ? gap : "1rem"}
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -58,7 +60,9 @@ const FilePicker: React.FC<Props> = ({ onSelect, file }) => {
             <Typography fontSize={"1rem"}>
               <CloudUploadIcon sx={{ fontSize: "1.5rem" }} />
             </Typography>
-            <Typography fontSize={"1rem"}>Select file</Typography>
+            <Typography fontSize={"1rem"}>
+              {title ? title : "Select file"}
+            </Typography>
           </>
         )}
       </Box>
