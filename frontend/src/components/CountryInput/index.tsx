@@ -19,6 +19,7 @@ interface Props {
   stateError?: string;
   onStateBlur: () => void;
   onCountryBlur: () => void;
+  gap?: string;
 }
 
 const CountryInput: React.FC<Props> = ({
@@ -30,6 +31,7 @@ const CountryInput: React.FC<Props> = ({
   stateError,
   onStateBlur,
   onCountryBlur,
+  gap,
 }) => {
   const [availableStates, setAvailableStates] = useState<string[]>();
 
@@ -47,7 +49,7 @@ const CountryInput: React.FC<Props> = ({
 
   return (
     <Box>
-      <FormControl fullWidth sx={{ mt: "1rem" }}>
+      <FormControl fullWidth>
         <InputLabel>Country</InputLabel>
         <Select
           onBlur={onCountryBlur}
@@ -70,10 +72,12 @@ const CountryInput: React.FC<Props> = ({
           ))}
         </Select>
       </FormControl>
-      <Typography pt="0.5rem" color={"custom.red"}>
-        {countryError}
-      </Typography>
-      <FormControl fullWidth sx={{ mt: "1rem" }}>
+      {countryError && (
+        <Typography pt="0.5rem" color={"custom.red"}>
+          {countryError}
+        </Typography>
+      )}
+      <FormControl fullWidth sx={{ mt: gap ? gap : "1rem" }}>
         <InputLabel>State</InputLabel>
         <Select
           onBlur={onStateBlur}
@@ -91,9 +95,11 @@ const CountryInput: React.FC<Props> = ({
           ))}
         </Select>
       </FormControl>
-      <Typography pt="0.5rem" color={"custom.red"}>
-        {stateError}
-      </Typography>
+      {stateError && (
+        <Typography pt="0.5rem" color={"custom.red"}>
+          {stateError}
+        </Typography>
+      )}
     </Box>
   );
 };
