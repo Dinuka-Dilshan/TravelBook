@@ -13,6 +13,7 @@ const userSchema = new Schema({
   gender: String,
   profilePicture: String,
   userType: String,
+  bio: String,
   viewRecords: [
     {
       time: Date,
