@@ -1,11 +1,12 @@
-import { Avatar, Button, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect } from "react";
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { useAppSelector } from "../../store/hooks";
-import { selectUser } from "../../store/slices/authSlice";
+import { useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
 import { PlaceComment } from "../../models/Place";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser } from "../../store/slices/authSlice";
+import AvatarLink from "../Avatar";
 
 type Props = PlaceComment & { placeID: string; refetch: () => void };
 
@@ -22,7 +23,7 @@ const Message: React.FC<Props> = ({
   const handleDelete = () => {
     fetchData(`place/comment`, {
       method: "DELETE",
-      type:"authenticated",
+      type: "authenticated",
       body: {
         commentID: _id,
         placeID: placeID,
@@ -43,7 +44,11 @@ const Message: React.FC<Props> = ({
       mb="1rem"
       position="relative"
     >
-      <Avatar src={author.profilePicture} />
+      <AvatarLink
+        image={author.profilePicture}
+        userID={author._id}
+        name={author.name}
+      />
       <Box
         p="1.5rem"
         bgcolor="#EAEAEA"
