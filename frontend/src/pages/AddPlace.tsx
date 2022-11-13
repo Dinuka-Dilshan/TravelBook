@@ -13,6 +13,7 @@ import FilePicker from "../components/FilePicker";
 import LocationPicker from "../components/Location/LocationPicker";
 import useFetch from "../hooks/useFetch";
 import useForm from "../hooks/useForm";
+import useHelmet from "../hooks/useHelmet";
 import { Place } from "../models/Place";
 
 const AddPlace = () => {
@@ -69,7 +70,7 @@ const AddPlace = () => {
       },
     },
   });
-
+  useHelmet("Add place");
   const { data, error, fetchData, isError, isLoading } = useFetch<Place>();
   const [image, setImage] = useState<File>();
   const [location, setLocation] = useState({ lat: 6.9271, lng: 79.8612 });
@@ -111,7 +112,14 @@ const AddPlace = () => {
 
   return (
     <>
-      {isLoading && <LinearProgress color="success" />}
+      {isLoading && (
+        <LinearProgress
+          sx={{
+            background: "linear-gradient(to right, red, purple)",
+            height: "0.1rem",
+          }}
+        />
+      )}
       <Container>
         <Typography pt="4rem" fontSize={"1.5rem"}>
           Add New Place
