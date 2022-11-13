@@ -27,4 +27,7 @@ export interface Place {
   };
   addedOn: string;
   comments: PlaceComment[];
+  viewRecords: { time: string; user: string }[];
+  likedBy: string[];
+  isLiked?: boolean;
 }
