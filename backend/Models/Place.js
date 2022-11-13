@@ -17,7 +17,7 @@ const placeSchema = new Schema({
   addedOn: Date,
   comments: [
     {
-      author:{
+      author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
@@ -29,6 +29,18 @@ const placeSchema = new Schema({
     {
       amount: Number,
       user: String,
+    },
+  ],
+  viewRecords: [
+    {
+      time: Date,
+      user: { type: mongoose.Types.ObjectId, ref: "User" },
+    },
+  ],
+  likedBy: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
     },
   ],
 });
