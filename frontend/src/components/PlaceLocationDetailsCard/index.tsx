@@ -3,6 +3,8 @@ import PublicIcon from "@mui/icons-material/Public";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { ImLocation } from "react-icons/im";
+import { BiCurrentLocation } from "react-icons/bi";
 
 interface Props {
   country: string;
@@ -21,20 +23,26 @@ const PlaceLocationDetailsCard: React.FC<Props> = ({
     <Grid
       container
       display="flex"
-      p={"1rem"}
+      py={"1rem"}
       mb="1rem"
-      bgcolor="#DEEFFF"
-      borderRadius={"0.2rem"}
-      gap={1}
+      px={0}
+      gap={2}
+      border={"0.1rem solid #EFEFEF"}
+      
+      borderLeft={0}
+      borderRight={0}
+      boxSizing={"border-box"}
     >
       <Grid xs={12} item display="flex" alignItems="center" gap={1}>
-        <PublicIcon />
-        <Typography>Located in {state} state of {country}</Typography>
+        <ImLocation />
+        <Typography letterSpacing={1.2}>
+          Located in {state} state of {country}
+        </Typography>
       </Grid>
       <Grid xs={12} item display="flex" alignItems="center" gap={1}>
-        <LocationOnIcon />
-        <Typography>Latitude : {latitude}</Typography>
-        <Typography>Longitude : {longitude}</Typography>
+        <BiCurrentLocation />
+        <Typography letterSpacing={1.2}>Latitude : {latitude}</Typography>
+        <Typography letterSpacing={1.2}>Longitude : {longitude}</Typography>
       </Grid>
     </Grid>
   );
