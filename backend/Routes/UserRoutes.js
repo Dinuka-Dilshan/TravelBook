@@ -1,9 +1,10 @@
 import express from "express";
 
 import {
-  signUpController,
-  loginController,
+  getProfileDetailsController,
   getUserDetailsController,
+  loginController,
+  signUpController,
 } from "../Controllers/User/UserController.js";
 import UserValidation, {
   userLoginValidation,
@@ -21,6 +22,7 @@ router.post(
 );
 router.post("/login", userLoginValidation, loginController);
 router.use(Auth);
+router.get("/profile", getProfileDetailsController);
 router.get("/:id", getUserDetailsController);
 
 export default router;
