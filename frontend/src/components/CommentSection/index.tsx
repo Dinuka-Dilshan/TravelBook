@@ -16,15 +16,25 @@ const CommentSecton: React.FC<Props> = ({ placeID }) => {
   const reFetchData = () => setFetch((p) => !p);
 
   useEffect(() => {
-    fetchData(`place/${placeID}`, { method: "GET", type:"authenticated" });
+    fetchData(`place/${placeID}`, { method: "GET", type: "authenticated" });
   }, [fetch]);
 
   return (
     <>
-      {isLoading && <LinearProgress />}
+      {isLoading && (
+        <LinearProgress
+          sx={{
+            background: "linear-gradient(to right, red, purple)",
+            height: "0.1rem",
+          }}
+        />
+      )}
       <Box
-        sx={{ overflowY: "hidden", "&:hover": { overflowY: "scroll" } }}
-        height={525}
+        sx={{
+          overflowY: "hidden",
+          "&:hover": { overflowY: "scroll" },
+          height: { lg: 525, xs: "fit-content" },
+        }}
       >
         {place?.comments.map((comment, index) => (
           <Message
@@ -35,7 +45,7 @@ const CommentSecton: React.FC<Props> = ({ placeID }) => {
           />
         ))}
       </Box>
-      <Box px="2rem" pt="2rem">
+      <Box sx={{ px: { lg: "2rem", xs:'0.5rem'} }} pt="2rem">
         {place?._id && <Comment placeID={place._id} refetch={reFetchData} />}
       </Box>
     </>

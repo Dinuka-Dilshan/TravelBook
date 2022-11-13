@@ -4,6 +4,10 @@ const { Schema, model } = mongoose;
 
 const placeSchema = new Schema({
   name: String,
+  phoneNumber: string,
+  packages:[{
+
+  }],
   description: String,
   state: String,
   country: String,

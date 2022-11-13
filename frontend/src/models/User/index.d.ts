@@ -1,3 +1,5 @@
+import { Place } from "../Place";
+
 export interface User {
   _id: string;
   name: string;
@@ -9,6 +11,11 @@ export interface User {
   gender: string;
   profilePicture: string;
   userType: string;
-  viewRecords: string[];
-  bio:string
+  bio: string;
+  viewRecords: { time: string; place: string; _id: string }[];
+  favouritePlaces: Place[];
 }
+
+export type UserProfile = Omit<User, "viewRecords"> & {
+  viewRecords: { time: string; place: Place; _id: string }[];
+};

@@ -1,44 +1,83 @@
-import { validationResult } from "express-validator";
 import mongoose from "mongoose";
 
 import Place from "../../Models/Place.js";
 import User from "../../Models/User.js";
-import ErrorResponse, { getErrorMessages } from "../../utils/ErrorResponse.js";
+import ErrorResponse from "../../utils/ErrorResponse.js";
 import { uploadFile } from "../../utils/File.js";
 import ValidationErrorResponse from "../../utils/ValidationErrorResponse.js";
 
 export const getAllPlaces = async (req, res, next) => {
   try {
-    const places = await Place.find({})
-      .populate({
-        path: "addedBy",
-        select: ["name", "email", "profilePicture"],
-      })
-      .populate({
-        path: "comments.author",
-        select: ["name", "email", "profilePicture"],
-      });
-    res.json(places);
+    const { id } = req.user;
+    const places = await Place.aggregate([
+      {
+        $addFields: {
+          isLiked: {
+            $cond: {
+              if: {
+                $isArray: "$likedBy",
+              },
+              then: {
+                $in: [mongoose.Types.ObjectId(id), "$likedBy"],
+              },
+              else: false,
+            },
+          },
+        },
+      },
+    ]);
+    const placesWithAddedBy = await Place.populate(places, {
+      path: "addedBy",
+      select: ["name", "email", "profilePicture"],
+    });
+    const placesWithComments = await Place.populate(placesWithAddedBy, {
+      path: "comments.author",
+      select: ["name", "email", "profilePicture"],
+    });
+    res.json(placesWithComments);
   } catch (error) {
-    return next(ErrorResponse());
+    return next(error);
   }
 };
 
 export const getPlaceByID = async (req, res, next) => {
-  const { id } = req.params;
   try {
-    const place = await Place.findById(id)
-      .populate({
-        path: "addedBy",
-        select: ["name", "email", "profilePicture"],
-      })
-      .populate({
-        path: "comments.author",
-        select: ["name", "email", "profilePicture"],
-      });
-    res.json(place);
+    const { id } = req.params;
+    const { id: userID } = req.user;
+    const place = await Place.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(id),
+        },
+      },
+      {
+        $addFields: {
+          isLiked: {
+            $cond: {
+              if: {
+                $isArray: "$likedBy",
+              },
+              then: {
+                $in: [mongoose.Types.ObjectId(userID), "$likedBy"],
+              },
+              else: false,
+            },
+          },
+        },
+      },
+    ]);
+    const placeWithAddedBy = await Place.populate(place, {
+      path: "addedBy",
+      select: ["name", "email", "profilePicture"],
+    });
+    const placeWithComments = await Place.populate(placeWithAddedBy, {
+      path: "comments.author",
+      select: ["name", "email", "profilePicture"],
+    });
+
+    res.json(placeWithComments[0]);
   } catch (error) {
-    return next(ErrorResponse());
+    return next(error);
   }
 };
 
@@ -65,6 +104,10 @@ export const addPlace = async (req, res, next) => {
       addedBy: id,
       addedOn: new Date(),
       photos: [imageUrl],
+      likedBy: [],
+      comments: [],
+      ratings: [],
+      viewRecords: [],
     });
 
     const savedPlace = await newPlace.save();
@@ -161,6 +204,95 @@ export const addPlacePhoto = async (req, res, next) => {
     place.photos.push(url);
     const updatedPlace = await place.save();
     res.json(updatedPlace);
+  } catch (error) {
+    return next(ErrorResponse());
+  }
+};
+
+export const placeViewRecord = async (req, res, next) => {
+  const { id: placeId } = req.params;
+  const { id: userId } = req.user;
+
+  try {
+    await Place.findByIdAndUpdate(placeId, {
+      $push: {
+        viewRecords: {
+          time: new Date(),
+          user: userId,
+        },
+      },
+    });
+    await User.findByIdAndUpdate(userId, {
+      $push: {
+        viewRecords: {
+          time: new Date(),
+          place: placeId,
+        },
+      },
+    });
+    res.json({
+      message: "recorded successfully",
+    });
+  } catch (error) {
+    return next(ErrorResponse());
+  }
+};
+
+export const getLikedPlacesController = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const favouritePlaces = await User.findById(id)
+      .populate("favouritePlaces", { viewRecords: 0 })
+      .select("favouritePlaces")
+      .exec();
+
+    res.json([...favouritePlaces?._doc.favouritePlaces]);
+  } catch (error) {
+    return next(ErrorResponse());
+  }
+};
+
+export const LikePlaceController = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { id: placeID } = req.params;
+
+    await User.findByIdAndUpdate(id, {
+      $addToSet: {
+        favouritePlaces: placeID,
+      },
+    });
+
+    await Place.findByIdAndUpdate(placeID, {
+      $addToSet: {
+        likedBy: id,
+      },
+    });
+
+    res.json({ message: "Liked successfully" });
+  } catch (error) {
+    return next(ErrorResponse());
+  }
+};
+
+export const unLikePlaceController = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { id: placeID } = req.params;
+
+    await User.findByIdAndUpdate(id, {
+      $pull: {
+        favouritePlaces: placeID,
+      },
+    });
+
+    await Place.findByIdAndUpdate(placeID, {
+      $pull: {
+        likedBy: id,
+      },
+    });
+
+    res.json({ message: "UnLiked successfully" });
   } catch (error) {
     return next(ErrorResponse());
   }

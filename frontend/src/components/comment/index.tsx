@@ -36,7 +36,7 @@ const Comment: React.FC<Props> = ({ placeID, refetch }) => {
   }, [isLoading, data]);
 
   return (
-    <FormControl sx={{ m: 1 }} variant="outlined" fullWidth>
+    <FormControl variant="outlined" fullWidth>
       <OutlinedInput
         disabled={isLoading}
         value={comment}

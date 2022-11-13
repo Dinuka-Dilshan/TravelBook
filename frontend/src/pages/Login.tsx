@@ -83,7 +83,7 @@ const Login = () => {
     }
   }, [data]);
   return (
-    <Grid container justifyContent="center" alignItems="center" height={"92vh"}>
+    <Grid container justifyContent="center" alignItems="center" height={"100vh"}>
       <Grid
         item
         xs={12}
@@ -92,11 +92,19 @@ const Login = () => {
         bgcolor="#F6F6F6"
         borderRadius="0.8rem"
       >
-        <Typography color="custom.fontGray" fontSize="1.5rem">
-          Login
+        <Typography
+          fontSize="2rem"
+          fontWeight={'bold'}
+          color="#333333"
+          letterSpacing={2}
+          fontFamily={"Poor Story, cursive"}
+          textAlign='center'
+        >
+          Travelmate
         </Typography>
         <Box mt="1rem">
           <TextField
+          size="small"
             fullWidth
             onBlur={() => {
               touchHandler("email");
@@ -117,6 +125,7 @@ const Login = () => {
               Password
             </InputLabel>
             <OutlinedInput
+            size="small"
               value={field("password").value}
               onChange={(e) => {
                 inputHandler("password", e.target.value);

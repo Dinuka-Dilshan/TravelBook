@@ -70,11 +70,17 @@ const ImageUpload: React.FC<Props> = ({
 
   return (
     <Modal onClose={onClose} width={"100%"}>
-      
-      <Typography fontWeight={500} fontSize="1.1rem" mb='1rem'>
+      <Typography fontWeight={500} fontSize="1.1rem" mb="1rem">
         Add a Photo of {capitalizeEachFirst(placeName)}
       </Typography>
-      {isLoading && <LinearProgress color="error" />}
+      {isLoading && (
+        <LinearProgress
+          sx={{
+            background: "linear-gradient(to right, red, purple)",
+            height: "0.1rem",
+          }}
+        />
+      )}
       {image && (
         <img
           src={image}

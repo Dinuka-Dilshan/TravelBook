@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import MainLayout from "./pages/MainLayout";
 import PlaceDetails from "./pages/PlaceDetails";
 import Places from "./pages/Places";
+import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import Trending from "./pages/Trending";
 import UserDetails from "./pages/UserDetails";
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
           <Route path="/trending" element={<Trending />} />
           <Route path="/places/:id" element={<PlaceDetails />} />
           <Route path="/user/:id" element={<UserDetails />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
     </Route>

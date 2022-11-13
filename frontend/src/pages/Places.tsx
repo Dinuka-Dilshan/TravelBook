@@ -1,8 +1,6 @@
-import AddIcon from "@mui/icons-material/Add";
-import { Fab, Grid, Tooltip } from "@mui/material";
+import { Grid, TextField, Tooltip } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import ErrorFS from "../components/ErrorFS";
 import LoaderFS from "../components/LoaderFS";
 import PlaceCard from "../components/Placecard/PlaceCard";
@@ -11,33 +9,33 @@ import { Place } from "../models/Place";
 
 const Places = () => {
   const { isLoading, data, fetchData, isError, error } = useFetch<Place[]>();
-  const navigate = useNavigate();
-
-  const handleAddPlaceClick = () => navigate("/addplace");
+  const [filter, setFilter] = useState("");
+  const [filteredData, setFilteredData] = useState<Place[]>();
 
   useEffect(() => {
     fetchData("place", { method: "GET", type: "authenticated" });
-  }, []);
+  }, [fetchData]);
+
+  useEffect(() => {
+    setFilteredData(
+      data?.filter((place) =>
+        place.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
+      )
+    );
+  }, [data, filter]);
 
   if (isError) {
     return <ErrorFS error={error} />;
   }
 
+  if (isLoading && !data) {
+    return <LoaderFS />;
+  }
+
   return (
-    <Box px="1rem" mb='2rem'>
-      {isLoading && <LoaderFS />}
-      <Tooltip title={"Add Place"}>
-        <Fab
-          onClick={handleAddPlaceClick}
-          color="primary"
-          aria-label="add"
-          sx={{ position: "fixed", bottom: "5%", right: "5%" }}
-        >
-          <AddIcon />
-        </Fab>
-      </Tooltip>
-      <Grid container px={{ xs: 0, lg: 15 }} pt={5} spacing={5}>
-        {data?.map((place, index) => (
+    <Box px="1rem" mb="2rem">
+      <Grid container px={{ xs: 0, lg: 15 }} pt={{ xs: 2, lg: 4 }} spacing={5}>
+        {filteredData?.map((place, index) => (
           <Grid item xs={12} lg={4} key={index}>
             <PlaceCard {...place} />
           </Grid>

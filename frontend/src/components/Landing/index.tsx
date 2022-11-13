@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import NavigationIcon from "@mui/icons-material/Navigation";
 const Landing = () => {
   const navigate = useNavigate();
 
@@ -21,9 +21,16 @@ const Landing = () => {
       display="flex"
       justifyContent={"center"}
       alignItems="center"
-      bgcolor={"primary.main"}
+      color={"primary.main"}
     >
-      <Typography color="white" fontSize="2rem" letterSpacing={6}>
+      <NavigationIcon sx={{ fontSize: "1.7rem", mr: "0.7rem" }} />
+      <Typography
+        fontSize="2rem"
+        fontWeight="bold"
+        letterSpacing={6}
+        color={"primary.main"}
+        fontFamily={"Poor Story, cursive"}
+      >
         TravelMate
       </Typography>
     </Box>

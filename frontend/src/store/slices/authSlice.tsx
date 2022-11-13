@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Place } from "../../models/Place";
 import type { RootState } from "../store";
 
 export interface AuthState {
@@ -13,7 +14,8 @@ export interface AuthState {
   gender: string | null;
   profilePicture: string | null;
   userType: string | null;
-  viewRecords: string[];
+  bio: string | null;
+  viewRecords: { time: string; place: string; _id: string }[];
 }
 
 const initialState: AuthState = {
@@ -29,6 +31,7 @@ const initialState: AuthState = {
   profilePicture: null,
   userType: null,
   viewRecords: [],
+  bio: null,
 };
 
 const authSlice = createSlice({

@@ -187,7 +187,14 @@ const SignUp = () => {
           <Typography fontSize={"1.2rem"} fontWeight="bold">
             Join TravelMate
           </Typography>
-          {isLoading && <LinearProgress color="success" />}
+          {isLoading && (
+            <LinearProgress
+              sx={{
+                background: "linear-gradient(to right, red, purple)",
+                height: "0.1rem",
+              }}
+            />
+          )}
           <TextField
             size="small"
             fullWidth

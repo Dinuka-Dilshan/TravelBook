@@ -17,7 +17,13 @@ const userSchema = new Schema({
   viewRecords: [
     {
       time: Date,
-      place: String,
+      place: { type: mongoose.Types.ObjectId, ref: "Place" },
+    },
+  ],
+  favouritePlaces: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Place",
     },
   ],
 });

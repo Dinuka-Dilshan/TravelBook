@@ -6,6 +6,7 @@ import useFetch from "../../hooks/useFetch";
 import { PlaceComment } from "../../models/Place";
 import { useAppSelector } from "../../store/hooks";
 import { selectUser } from "../../store/slices/authSlice";
+import { removeWhiteSpacesWith } from "../../utils/string";
 import AvatarLink from "../Avatar";
 
 type Props = PlaceComment & { placeID: string; refetch: () => void };
@@ -40,24 +41,23 @@ const Message: React.FC<Props> = ({
     <Box
       display="flex"
       justifyContent="space-around"
-      p="1rem"
+      py="1rem"
+      sx={{ px: { lg: "1rem", xs: 0 } }}
       mb="1rem"
       position="relative"
     >
-      <AvatarLink
-        image={author.profilePicture}
-        userID={author._id}
-        name={author.name}
-      />
-      <Box
-        p="1.5rem"
-        bgcolor="#EAEAEA"
-        mx="1rem"
-        borderRadius="1rem"
-        width={"100%"}
-      >
-        <Typography fontWeight="bold">{author.name}</Typography>
-        <Typography mt="0.8rem">{content}</Typography>
+      <Box>
+        <AvatarLink
+          image={author.profilePicture}
+          userID={author._id}
+          name={author.name}
+        />
+      </Box>
+      <Box mx="1rem" borderRadius="1rem" width={"100%"}>
+        <Typography fontWeight="bold">
+          {removeWhiteSpacesWith(author.name.toLocaleLowerCase(), "_")}
+        </Typography>
+        <Typography>{content}</Typography>
         <Box
           position="absolute"
           bottom="-10%"
@@ -65,7 +65,7 @@ const Message: React.FC<Props> = ({
           gap={5}
           p={"0.2rem"}
         >
-          <Typography fontSize={"0.8rem"}>
+          <Typography fontSize={"0.8rem"} color={"#CACACA"}>
             {formatDistanceToNow(parseISO(time), { addSuffix: true })}
           </Typography>
         </Box>
