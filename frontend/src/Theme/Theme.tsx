@@ -15,28 +15,27 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 8,
-          fontSize: "1.2rem",
-          padding:'0.3rem'
+          padding: "0.3rem",
         },
       },
     },
   },
   palette: {
     primary: {
-      main: "#2969E2",
-      light:'#F3F9FF'
+      main: "#1877F2",
+      light: "#F3F9FF",
     },
     custom: {
       gray: "#E8E9EB",
-      lightGray:'#F6F6F6',
-      fontGray:'#545454',
-      darkBlue:'#104CBE',
-      red:'#d32f2f'
+      lightGray: "#F6F6F6",
+      fontGray: "#545454",
+      darkBlue: "#104CBE",
+      red: "#d32f2f",
     },
   },
   typography: {
     fontFamily: "Poppins, sans-seri",
-    fontSize:12
+    fontSize: 12,
   },
 });
 
