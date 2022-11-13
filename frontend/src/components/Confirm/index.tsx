@@ -9,34 +9,50 @@ interface Props {
 const Confirm: React.FC<Props> = ({ onConfirmNotOk, onConfirmOk }) => {
   return (
     <Box
-      zIndex={1000}
-      position={"fixed"}
-      top={"10%"}
-      left="50%"
-      sx={{ transform: "translateX(-50%)" }}
-      width="25rem"
-      height={"3rem"}
-      bgcolor="red"
-      borderRadius="0.8rem"
-      display={"flex"}
-      justifyContent="space-between"
-      alignItems={"center"}
-      p="0.2rem"
-      px="1rem"
-      boxShadow={
-        "rgba(0, 0, 0, 0.2) 0px 3px 5px -1px, rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px"
-      }
+      sx={{
+        position: "fixed",
+        width: "100vw",
+        height: "100vh",
+        top: 0,
+        left: 0,
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "rgba(255, 255, 255, 0.1)",
+        flexDirection: "column",
+        zIndex: 2500,
+      }}
     >
-      <Typography fontSize={"1.2rem"} color={"white"}>
-        Are you sure?
-      </Typography>
-      <Box>
-        <Button onClick={onConfirmOk} sx={{ color: "white" }}>
-          Yes
-        </Button>
-        <Button onClick={onConfirmNotOk} sx={{ color: "white" }}>
-          No
-        </Button>
+      <Box
+        zIndex={1000}
+        position={"fixed"}
+        top={"10%"}
+        left="50%"
+        sx={{ transform: "translateX(-50%)" }}
+        width="25rem"
+        height={"3rem"}
+        display={"flex"}
+        justifyContent="space-between"
+        alignItems={"center"}
+        p="0.2rem"
+        px="1rem"
+        bgcolor="white"
+        boxShadow={"rgba(0, 0, 0, 0.16) 0px 1px 4px;"}
+      >
+        <Typography
+          fontSize={"1.2rem"}
+          color="#333333"
+          letterSpacing={2}
+          fontFamily={"Poor Story, cursive"}
+        >
+          Are you sure?
+        </Typography>
+        <Box>
+          <Button onClick={onConfirmOk}>Yes</Button>
+          <Button onClick={onConfirmNotOk}>No</Button>
+        </Box>
       </Box>
     </Box>
   );
