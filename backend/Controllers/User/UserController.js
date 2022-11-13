@@ -131,3 +131,21 @@ export const getUserDetailsController = async (req, res, next) => {
     return next(ErrorResponse());
   }
 };
+
+export const getProfileDetailsController = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findById(id, { password: 0 })
+      .populate("viewRecords.place")
+      .populate("favouritePlaces")
+      .exec();
+    const places = await Place.find({ addedBy: id }).exec();
+    if (!user) {
+      return next(ErrorResponse({ code: 404, message: "user not found" }));
+    }
+
+    res.json({ user, places });
+  } catch (error) {
+    return next(ErrorResponse());
+  }
+};
