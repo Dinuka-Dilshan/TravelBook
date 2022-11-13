@@ -29,8 +29,10 @@ const LoaderFS = () => {
       </div>
       <Typography
         color={"primary.main"}
-        fontSize={"1.2rem"}
+        fontSize={"1.3rem"}
         fontWeight={"bold"}
+        fontFamily={"Poor Story, cursive"}
+        letterSpacing={1.2}
       >
         Hang On!
       </Typography>
