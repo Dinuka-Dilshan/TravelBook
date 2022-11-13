@@ -1,5 +1,5 @@
 export const capitalize = (str: string) =>
-  `${str.charAt(0).toUpperCase()}${str.slice(1, str.length)}`;
+  `${str.charAt(0).toUpperCase()}${str.toLowerCase().slice(1, str.length)}`;
 
 export const capitalizeEachFirst = (str: string) => {
   return str.split(" ").reduce((newStr, currentStr) => {
@@ -15,3 +15,8 @@ export const truncate = (str: string, length: number) => {
   }
 };
 
+export const removeWhiteSpacesWith = (str: string, char?: string) =>
+  str.replace(/\s/g, char ? char : "_");
+
+export const getRandomItemFromStringArray = (arr: string[]) =>
+  arr[Math.ceil(Math.random() * (arr.length - 1))];
