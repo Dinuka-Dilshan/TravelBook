@@ -16,6 +16,7 @@ interface Props {
   onSuccess: () => void;
   placeName: string;
   placeID: string;
+  isBusiness?: boolean;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const ImageUpload: React.FC<Props> = ({
   placeName,
   placeID,
   onSuccess,
+  isBusiness,
 }) => {
   const [file, setFile] = useState<File>();
   const [image, setImage] = useState<string>();
@@ -39,15 +41,26 @@ const ImageUpload: React.FC<Props> = ({
 
   const handleSave = () => {
     if (!file) return;
-    const formData = new FormData();
-    formData.append("placeImage", file);
-    formData.append("placeID", placeID);
-    fetchData("place/addPhoto", {
-      method: "POST",
-      type: "file",
-      body: formData,
-      autoErrorNotify: true,
-    });
+    if (isBusiness) {
+      const formData = new FormData();
+      formData.append("placeImage", file);
+      fetchData("business/addPhoto", {
+        method: "POST",
+        type: "file",
+        body: formData,
+        autoErrorNotify: true,
+      });
+    } else {
+      const formData = new FormData();
+      formData.append("placeImage", file);
+      formData.append("placeID", placeID);
+      fetchData("place/addPhoto", {
+        method: "POST",
+        type: "file",
+        body: formData,
+        autoErrorNotify: true,
+      });
+    }
   };
 
   useEffect(() => {
