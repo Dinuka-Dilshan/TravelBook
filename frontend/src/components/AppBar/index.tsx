@@ -13,6 +13,7 @@ import { logout, selectUser } from "../../store/slices/authSlice";
 import AvatarLink from "../Avatar";
 import Confirm from "../Confirm";
 import { HiLogout } from "react-icons/hi";
+import { TbBrandBooking } from "react-icons/tb";
 
 const AppBar = () => {
   const user = useAppSelector(selectUser);
@@ -51,7 +52,7 @@ const AppBar = () => {
     setIsConfirmOpen(false);
   }, []);
 
-  return Boolean(user._id) ? (
+  return (
     <Box
       height={"8vh"}
       width="100%"
@@ -112,6 +113,12 @@ const AppBar = () => {
         </NavLink>
         <NavLink
           style={({ isActive }) => (isActive ? activeStyles : inActiveStyles)}
+          to={"/bookings"}
+        >
+          <TbBrandBooking size={25} />
+        </NavLink>
+        <NavLink
+          style={({ isActive }) => (isActive ? activeStyles : inActiveStyles)}
           to={"/trending"}
         >
           <FiTrendingUp size={25} />
@@ -146,7 +153,7 @@ const AppBar = () => {
         </Box>
       </Box>
     </Box>
-  ) : null;
+  );
 };
 
 export default AppBar;
