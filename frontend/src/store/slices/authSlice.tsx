@@ -13,9 +13,10 @@ export interface AuthState {
   birthDate: string | null;
   gender: string | null;
   profilePicture: string | null;
-  userType: string | null;
+  userType: "admin" | "normalUser" | "businessUser" | string | null;
   bio: string | null;
   viewRecords: { time: string; place: string; _id: string }[];
+  nationalID?:string
 }
 
 const initialState: AuthState = {
