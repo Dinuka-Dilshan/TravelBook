@@ -82,7 +82,10 @@ export const getPlaceByID = async (req, res, next) => {
 };
 
 export const addPlace = async (req, res, next) => {
-  ValidationErrorResponse(req, next);
+  const error = ValidationErrorResponse(req);
+  if (error) {
+    return next(error);
+  }
 
   const { name, description, state, country, latitude, longitude } = req.body;
   const { id } = req.user;
@@ -119,7 +122,10 @@ export const addPlace = async (req, res, next) => {
 };
 
 export const addComment = async (req, res, next) => {
-  ValidationErrorResponse(req, next);
+  const error = ValidationErrorResponse(req);
+  if (error) {
+    return next(error);
+  }
 
   const email = req.user.email;
   const { content, placeID } = req.body;
@@ -154,7 +160,10 @@ export const addComment = async (req, res, next) => {
 };
 
 export const deleteComment = async (req, res, next) => {
-  ValidationErrorResponse(req, next);
+  const error = ValidationErrorResponse(req);
+  if (error) {
+    return next(error);
+  }
   const userID = req.user.id;
   const { commentID, placeID } = req.body;
   try {
@@ -178,7 +187,10 @@ export const deleteComment = async (req, res, next) => {
 };
 
 export const addPlacePhoto = async (req, res, next) => {
-  ValidationErrorResponse(req, next);
+  const error = ValidationErrorResponse(req);
+  if (error) {
+    return next(error);
+  }
 
   const { placeID } = req.body;
 
