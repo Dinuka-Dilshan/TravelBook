@@ -14,6 +14,7 @@ const userSchema = new Schema({
   profilePicture: String,
   userType: String,
   bio: String,
+  nationalID: String,
   viewRecords: [
     {
       time: Date,
@@ -24,6 +25,12 @@ const userSchema = new Schema({
     {
       type: mongoose.Types.ObjectId,
       ref: "Place",
+    },
+  ],
+  favouriteBusinessPlaces: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "BusinessPlace",
     },
   ],
 });
