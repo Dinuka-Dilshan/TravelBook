@@ -2,6 +2,7 @@ import {
   Button,
   CircularProgress,
   Container,
+  Grid,
   LinearProgress,
   TextField,
   Typography,
@@ -120,125 +121,135 @@ const AddPlace = () => {
           }}
         />
       )}
-      <Container>
-        <Typography pt="4rem" fontSize={"1.5rem"}>
-          Add New Place
-        </Typography>
-        <TextField
-          value={field("name").value}
-          onChange={(e) => {
-            inputHandler("name", e.target.value);
-          }}
-          onBlur={() => {
-            touchHandler("name");
-          }}
-          size="small"
-          fullWidth
-          sx={{ my: "1rem" }}
-          placeholder="Name"
-          label="Name"
-        />
-        {!field("name").isValid && field("name").isTouched && (
-          <Typography pt="0.5rem" color={"custom.red"}>
-            {field("name").errorMessage}
+      <Grid container justifyContent={"center"}>
+        <Grid item xs={5}>
+          <Typography
+            pt="4rem"
+            fontSize={"1.5rem"}
+            fontWeight={"bold"}
+            fontFamily={"Poor Story, cursive"}
+            sx={{ fontSize: { lg: "1.5rem", xs: "1.3rem" } }}
+          >
+            Add New Place
           </Typography>
-        )}
-        <CountryInput
-          country={field("country").value}
-          state={field("state").value}
-          setState={(state) => {
-            inputHandler("state", state);
-          }}
-          setCountry={(country) => {
-            inputHandler("country", country);
-          }}
-          countryError={
-            !field("country").isValid && field("country").isTouched
-              ? field("country").errorMessage
-              : ""
-          }
-          stateError={
-            !field("state").isValid && field("state").isTouched
-              ? field("state").errorMessage
-              : ""
-          }
-          onStateBlur={() => {
-            touchHandler("state");
-          }}
-          onCountryBlur={() => {
-            touchHandler("country");
-          }}
-        />
-        <TextField
-          value={field("description").value}
-          onChange={(e) => {
-            inputHandler("description", e.target.value);
-          }}
-          onBlur={() => {
-            touchHandler("description");
-          }}
-          size="small"
-          fullWidth
-          sx={{ mt: "1rem" }}
-          placeholder="Description"
-          label="Description"
-        />
-        {!field("description").isValid && field("description").isTouched && (
-          <Typography pt="0.5rem" color={"custom.red"}>
-            {field("description").errorMessage}
-          </Typography>
-        )}
-        <LocationPicker
-          onSelect={() =>
-            setIsLocationSet((prev) => ({ ...prev, isSet: true }))
-          }
-          onBlur={() => setIsLocationSet((prev) => ({ ...prev, isBlur: true }))}
-          onClick={(coods) => {
-            setLocation((prev) => {
-              if (coods?.lat && coods?.lng) {
-                return { lat: coods.lat, lng: coods.lng };
-              }
-              return prev;
-            });
-          }}
-          location={location}
-        />
-        {!isLocationSet.isSet && isLocationSet.isBlur && (
-          <Typography pt="0.5rem" color={"custom.red"}>
-            Please select the location - click to select
-          </Typography>
-        )}
-        <FilePicker
-          onSelect={(file) => {
-            setImage(file);
-          }}
-          file={image}
-        />
-
-        <Button
-          sx={{ mt: "2rem", mr: "1rem", width: "25%" }}
-          variant="contained"
-          onClick={handleReset}
-        >
-          Clear
-        </Button>
-        <Button
-          disabled={!state.isValid || isLoading || !isLocationSet.isSet}
-          onClick={handleAddPlace}
-          sx={{ mt: "2rem", width: "25%" }}
-          color={"success"}
-          variant="contained"
-        >
-          Save
-          {isLoading && (
-            <CircularProgress
-              color="inherit"
-              size={"1.3rem"}
-              sx={{ ml: "1rem" }}
-            />
+          <TextField
+            value={field("name").value}
+            onChange={(e) => {
+              inputHandler("name", e.target.value);
+            }}
+            onBlur={() => {
+              touchHandler("name");
+            }}
+            size="small"
+            fullWidth
+            sx={{ my: "1rem" }}
+            placeholder="Name"
+            label="Name"
+          />
+          {!field("name").isValid && field("name").isTouched && (
+            <Typography pt="0.5rem" color={"custom.red"}>
+              {field("name").errorMessage}
+            </Typography>
           )}
-        </Button>
-      </Container>
+          <CountryInput
+            country={field("country").value}
+            state={field("state").value}
+            setState={(state) => {
+              inputHandler("state", state);
+            }}
+            setCountry={(country) => {
+              inputHandler("country", country);
+            }}
+            countryError={
+              !field("country").isValid && field("country").isTouched
+                ? field("country").errorMessage
+                : ""
+            }
+            stateError={
+              !field("state").isValid && field("state").isTouched
+                ? field("state").errorMessage
+                : ""
+            }
+            onStateBlur={() => {
+              touchHandler("state");
+            }}
+            onCountryBlur={() => {
+              touchHandler("country");
+            }}
+          />
+          <TextField
+            value={field("description").value}
+            onChange={(e) => {
+              inputHandler("description", e.target.value);
+            }}
+            onBlur={() => {
+              touchHandler("description");
+            }}
+            size="small"
+            fullWidth
+            sx={{ mt: "1rem" }}
+            placeholder="Description"
+            label="Description"
+          />
+          {!field("description").isValid && field("description").isTouched && (
+            <Typography pt="0.5rem" color={"custom.red"}>
+              {field("description").errorMessage}
+            </Typography>
+          )}
+          <LocationPicker
+            onSelect={() =>
+              setIsLocationSet((prev) => ({ ...prev, isSet: true }))
+            }
+            onBlur={() =>
+              setIsLocationSet((prev) => ({ ...prev, isBlur: true }))
+            }
+            onClick={(coods) => {
+              setLocation((prev) => {
+                if (coods?.lat && coods?.lng) {
+                  return { lat: coods.lat, lng: coods.lng };
+                }
+                return prev;
+              });
+            }}
+            location={location}
+          />
+          {!isLocationSet.isSet && isLocationSet.isBlur && (
+            <Typography pt="0.5rem" color={"custom.red"}>
+              Please select the location - click to select
+            </Typography>
+          )}
+          <FilePicker
+            onSelect={(file) => {
+              setImage(file);
+            }}
+            file={image}
+          />
+
+          <Button
+            sx={{ mt: "2rem", mr: "1rem", width: "25%" }}
+            variant="contained"
+            onClick={handleReset}
+          >
+            Clear
+          </Button>
+          <Button
+            disabled={!state.isValid || isLoading || !isLocationSet.isSet}
+            onClick={handleAddPlace}
+            sx={{ mt: "2rem", width: "25%" }}
+            color={"success"}
+            variant="contained"
+          >
+            Save
+            {isLoading && (
+              <CircularProgress
+                color="inherit"
+                size={"1.3rem"}
+                sx={{ ml: "1rem" }}
+              />
+            )}
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 };
