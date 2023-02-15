@@ -79,11 +79,21 @@ const Login = () => {
     if (data?.token) {
       dispatch(login(data));
       localStorage.setItem("user", JSON.stringify(data));
-      navigate("/places", { replace: true });
+      if (data.userType === "businessUser") {
+        navigate("/business/dashboard", { replace: true });
+      }
+      if (data.userType === "normalUser") {
+        navigate("/places", { replace: true });
+      }
     }
   }, [data]);
   return (
-    <Grid container justifyContent="center" alignItems="center" height={"100vh"}>
+    <Grid
+      container
+      justifyContent="center"
+      alignItems="center"
+      height={"100vh"}
+    >
       <Grid
         item
         xs={12}
@@ -94,17 +104,17 @@ const Login = () => {
       >
         <Typography
           fontSize="2rem"
-          fontWeight={'bold'}
+          fontWeight={"bold"}
           color="#333333"
           letterSpacing={2}
           fontFamily={"Poor Story, cursive"}
-          textAlign='center'
+          textAlign="center"
         >
           Travelmate
         </Typography>
         <Box mt="1rem">
           <TextField
-          size="small"
+            size="small"
             fullWidth
             onBlur={() => {
               touchHandler("email");
@@ -125,7 +135,7 @@ const Login = () => {
               Password
             </InputLabel>
             <OutlinedInput
-            size="small"
+              size="small"
               value={field("password").value}
               onChange={(e) => {
                 inputHandler("password", e.target.value);
@@ -236,6 +246,9 @@ const Login = () => {
             bgcolor="#FFFFFF"
           >
             <Typography
+              onClick={() => {
+                navigate("/business/join", { replace: true });
+              }}
               fontSize="0.7rem"
               color="primary"
               sx={{ cursor: "pointer", textDecoration: "underline" }}
