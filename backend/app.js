@@ -6,6 +6,8 @@ import cors from "cors";
 
 import userRoutes from "./Routes/UserRoutes.js";
 import placeRoutes from "./Routes/PlaceRoutes.js";
+import businessPlaceRoutes from "./Routes/BusinessPlaceRoutes.js";
+import bookingRoutes from "./Routes/BookingRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -13,6 +15,8 @@ app.use(express.json());
 
 app.use("/user", userRoutes);
 app.use("/place", placeRoutes);
+app.use("/business", businessPlaceRoutes);
+app.use("/booking", bookingRoutes);
 
 app.use((err, req, res, next) => {
   if (err.errorCode) {
