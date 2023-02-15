@@ -13,7 +13,6 @@ const firebaseConfig = {
   appId: process.env.Firebase_appId,
 };
 
-
 const MIME_TYPES = {
   "image/png": "png",
   "image/jpeg": "jpeg",
@@ -27,7 +26,8 @@ const storage = getStorage(app);
 
 export const uploadFile = (file) => {
   return new Promise((resolve, reject) => {
-    const fileExtention = MIME_TYPES[file.mimetype];
+    const fileExtention = MIME_TYPES[file?.mimetype];
+    
 
     if (!fileExtention) {
       reject("unsupported file type");
