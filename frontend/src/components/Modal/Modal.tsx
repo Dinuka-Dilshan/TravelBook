@@ -1,5 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Card, CardContent, IconButton } from "@mui/material";
+import { Card, CardContent, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -9,10 +9,12 @@ interface Props {
   width: string | number;
   size?: string;
   height?: string;
+  title?: string;
 }
 
 const Modal: React.FC<Props> = ({
   onClose,
+  title,
   children,
   width,
   size = "350px",
@@ -48,7 +50,14 @@ const Modal: React.FC<Props> = ({
           variant="outlined"
           sx={{ minWidth: size, px: "1rem", py: "0.8rem" }}
         >
-          <Box display="flex" justifyContent="flex-end" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography fontWeight={"bold"} fontSize="1.2rem" sx={{ml:'1rem'}}>
+              {title}
+            </Typography>
             <IconButton
               onClick={closeHandler}
               size="small"
