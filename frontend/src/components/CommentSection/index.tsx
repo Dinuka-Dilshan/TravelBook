@@ -1,4 +1,4 @@
-import { Box, LinearProgress } from "@mui/material";
+import { Box, LinearProgress, Typography } from "@mui/material";
 import Message from "../Message/Message";
 import Comment from "../comment";
 import useFetch from "../../hooks/useFetch";
@@ -36,6 +36,23 @@ const CommentSecton: React.FC<Props> = ({ placeID }) => {
           height: { lg: 525, xs: "fit-content" },
         }}
       >
+        {place?.comments.length === 0 && (
+          <Box
+            width={"100%"}
+            height="60vh"
+            display={"flex"}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Typography
+              fontSize={"1.5rem"}
+              fontWeight={"bold"}
+              fontFamily={"Poor Story, cursive"}
+            >
+             No Comments published for this places yet!
+            </Typography>
+          </Box>
+        )}
         {place?.comments.map((comment, index) => (
           <Message
             {...comment}
@@ -45,7 +62,7 @@ const CommentSecton: React.FC<Props> = ({ placeID }) => {
           />
         ))}
       </Box>
-      <Box sx={{ px: { lg: "2rem", xs:'0.5rem'} }} pt="2rem">
+      <Box sx={{ px: { lg: "2rem", xs: "0.5rem" } }} pt="2rem">
         {place?._id && <Comment placeID={place._id} refetch={reFetchData} />}
       </Box>
     </>

@@ -21,7 +21,7 @@ const LocationPicker: React.FC<Props> = ({
   onBlur = () => {},
 }) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY as string,
+    googleMapsApiKey: import.meta.env.VITE_MAPS_API_KEY as string,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);

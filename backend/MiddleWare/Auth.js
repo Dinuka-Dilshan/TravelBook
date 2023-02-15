@@ -22,3 +22,16 @@ export default async (req, res, next) => {
     return next(ErrorResponse("un-authorized"));
   }
 };
+
+export const authUserType = (userTypes) => {
+  return (req, res, next) => {
+    if (
+      (Array.isArray(userTypes) && userTypes.includes(req.user.type)) ||
+      req.user.type === userTypes
+    ) {
+      return next();
+    } else {
+      return next(ErrorResponse("un-authorized"));
+    }
+  };
+};

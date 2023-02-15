@@ -1,12 +1,14 @@
 import express from "express";
 
 import {
+  businessSignUpUpController,
   getProfileDetailsController,
   getUserDetailsController,
   loginController,
   signUpController,
 } from "../Controllers/User/UserController.js";
 import UserValidation, {
+  businessUserSignUpValidation,
   userLoginValidation,
 } from "../Controllers/User/UserValidation.js";
 import Auth from "../MiddleWare/Auth.js";
@@ -19,6 +21,12 @@ router.post(
   upload.single("profilePicture"),
   UserValidation,
   signUpController
+);
+router.post(
+  "/business/signup",
+  upload.single("profilePicture"),
+  businessUserSignUpValidation,
+  businessSignUpUpController
 );
 router.post("/login", userLoginValidation, loginController);
 router.use(Auth);

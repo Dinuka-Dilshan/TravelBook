@@ -16,7 +16,7 @@ const ViewLocation: React.FC<Props> = ({
   location,
 }) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY as string,
+    googleMapsApiKey: import.meta.env.VITE_MAPS_API_KEY as string,
   });
 
   return (

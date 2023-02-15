@@ -1,15 +1,11 @@
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ShareIcon from "@mui/icons-material/Share";
 import StarIcon from "@mui/icons-material/Star";
-import { BsCalendar2Date } from "react-icons/bs";
 import {
   Container,
   Grid,
   IconButton,
-  ImageList,
-  ImageListItem,
   LinearProgress,
   Typography,
 } from "@mui/material";
@@ -24,6 +20,7 @@ import ErrorFS from "../components/ErrorFS";
 import Like from "../components/Like";
 import LoaderFS from "../components/LoaderFS";
 import ViewLocation from "../components/Location";
+import ReactGallery from "../components/Photo-Grid/ReactGallery";
 import ImageUpload from "../components/PlaceImageUpload";
 import PlaceLocationDetailsCard from "../components/PlaceLocationDetailsCard";
 import ShareLocation from "../components/ShareLocation/ShareLocation";
@@ -33,7 +30,7 @@ import { Place } from "../models/Place";
 import { capitalizeEachFirst, removeWhiteSpacesWith } from "../utils/string";
 const srcset = (image: string, size: number, rows = 1, cols = 1) => {
   return {
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
+    src: `${image}`,
     srcSet: `${image}?w=${size * cols}&h=${
       size * rows
     }&fit=crop&auto=format&dpr=2 2x`,
@@ -148,21 +145,28 @@ const PlaceDetails = () => {
           onSuccess={refetchPlaceDetails}
         />
       )}
-      <Grid container mb="2rem" >
+      <Grid container mb="2rem">
         <Grid item xs={12} lg={6}>
           {place && (
-            <ImageList
-              sx={{ width: "100%", maxHeight: 500 }}
-              variant="quilted"
-              cols={4}
-              rowHeight={121}
-            >
-              {place.photos.map((photo, index) => (
-                <ImageListItem key={index} cols={4} rows={4}>
-                  <img {...srcset(photo, 121, 2, 1)} alt={""} loading="lazy" />
-                </ImageListItem>
-              ))}
-            </ImageList>
+            <Box mb="1rem">
+              <ReactGallery
+                images={place.photos.map((p) => ({ src: p }))}
+                height={500}
+                width={"100%"}
+              />
+            </Box>
+            // <ImageList
+            //   sx={{ width: "100%", maxHeight: 500 }}
+            //   variant="quilted"
+            //   cols={4}
+            //   rowHeight={121}
+            // >
+            //   {place.photos.map((photo, index) => (
+            //     <ImageListItem key={index} cols={4} rows={4}>
+            //       <img {...srcset(photo, 121, 2, 1)} alt={""} loading="lazy" />
+            //     </ImageListItem>
+            //   ))}
+            // </ImageList>
           )}
           <Box
             display="flex"

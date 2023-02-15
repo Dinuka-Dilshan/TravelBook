@@ -67,7 +67,7 @@ const Profile = () => {
             birthDate={data?.user.birthDate || ""}
             gender={data?.user.gender || ""}
             profilePicture={data?.user.profilePicture || ""}
-            userType={data?.user.userType || ""}
+            userType={data?.user.userType|| ""}
             bio={data?.user.bio || ""}
             _id={data?.user._id || ""}
             favouritePlaces={[]}

@@ -36,7 +36,7 @@ const useFetch = <T extends any>() => {
       }
     ) => {
       setIsLoading(true);
-      fetch(`${process.env.REACT_APP_API_BASE_URL}/${url}`, {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/${url}`, {
         method: options.method,
         headers: HEADER_TYPES[options.type],
         body:

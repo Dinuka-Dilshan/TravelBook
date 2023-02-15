@@ -1,6 +1,6 @@
 import express from "express";
 
-import Auth from "../MiddleWare/Auth.js";
+import Auth, { authUserType } from "../MiddleWare/Auth.js";
 import {
   placeValidation,
   commentValidation,
@@ -20,9 +20,11 @@ import {
   unLikePlaceController,
 } from "../Controllers/Place/PlaceController.js";
 import { upload } from "../MiddleWare/FileParse.js";
+import { USER_TYPES } from "../constants/index.js";
 
 const router = express.Router();
 router.use(Auth);
+// router.use(authUserType([USER_TYPES.admin,USER_TYPES.businessUser]));
 router.get("/", getAllPlaces);
 router.get("/likedPlaces", getLikedPlacesController);
 router.get("/:id", getPlaceByID);

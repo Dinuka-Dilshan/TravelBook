@@ -10,10 +10,11 @@ export interface User {
   birthDate: string;
   gender: string;
   profilePicture: string;
-  userType: string;
+  userType: "admin" | "normalUser" | "businessUser" | string;
   bio: string;
   viewRecords: { time: string; place: string; _id: string }[];
   favouritePlaces: Place[];
+  nationalID?:string
 }
 
 export type UserProfile = Omit<User, "viewRecords"> & {

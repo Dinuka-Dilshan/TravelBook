@@ -2,12 +2,20 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-const placeSchema = new Schema({
+const businessPlaceSchema = new Schema({
   name: String,
-  phoneNumber: string,
-  packages:[{
-
-  }],
+  facilities: [String],
+  packages: [
+    {
+      dailyPrice: Number,
+      guestSize: Number,
+      isPetsAllowed: Boolean,
+      numberOfRooms: Number,
+      numberOfBeds: Number,
+      name: String,
+    },
+  ],
+  rules: [String],
   description: String,
   state: String,
   country: String,
@@ -32,7 +40,7 @@ const placeSchema = new Schema({
   ratings: [
     {
       amount: Number,
-      user: String,
+      user: { type: mongoose.Types.ObjectId, ref: "User" },
     },
   ],
   viewRecords: [
@@ -49,4 +57,4 @@ const placeSchema = new Schema({
   ],
 });
 
-export default model("Place", placeSchema);
+export default model("BusinessPlace", businessPlaceSchema);

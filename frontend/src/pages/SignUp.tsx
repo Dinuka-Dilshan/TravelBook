@@ -174,7 +174,13 @@ const SignUp = () => {
   };
   return (
     <Container>
-      <Grid container width={"100%"} justifyContent="center">
+      <Grid
+        container
+        width={"100%"}
+        justifyContent="center"
+        height={"100vh"}
+        alignItems="center"
+      >
         <Grid
           xs={12}
           lg={6}
@@ -182,9 +188,15 @@ const SignUp = () => {
           display={"flex"}
           flexDirection="column"
           gap={"1rem"}
-          py="2rem"
+          p="2rem"
+          bgcolor="#F6F6F6"
+          borderRadius="0.8rem"
         >
-          <Typography fontSize={"1.2rem"} fontWeight="bold">
+          <Typography
+            fontSize={"1.8rem"}
+            fontWeight="bold"
+            fontFamily={"Poor Story, cursive"}
+          >
             Join TravelMate
           </Typography>
           {isLoading && (

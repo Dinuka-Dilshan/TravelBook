@@ -9,7 +9,7 @@ const LoaderFS = () => {
         position: "fixed",
         width: "100vw",
         height: "100vh",
-        top: "8%",
+        top: "9%",
         left: 0,
         backdropFilter: "blur(30px)",
         WebkitBackdropFilter: "blur(30px)",

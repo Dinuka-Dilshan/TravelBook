@@ -10,9 +10,10 @@ interface Props {
   placeID: string;
   isLiked?: boolean;
   p?: string;
+  isBusinessPlace?: boolean;
 }
 
-const Like: React.FC<Props> = ({ placeID, p }) => {
+const Like: React.FC<Props> = ({ placeID, p, isBusinessPlace }) => {
   const { _id } = useAppSelector(selectUser);
   const [isLiked, setIsLiked] = useState(false);
   const { data, fetchData } = useFetch<Place[]>();
@@ -26,7 +27,7 @@ const Like: React.FC<Props> = ({ placeID, p }) => {
   }, [placeID, data, _id]);
 
   useEffect(() => {
-    fetchData("place/likedPlaces", {
+    fetchData(`${isBusinessPlace ? "business" : "place"}/likedPlaces`, {
       method: "GET",
       type: "authenticated",
     });
@@ -35,15 +36,21 @@ const Like: React.FC<Props> = ({ placeID, p }) => {
   const likeToggleHandler = () => {
     setIsLiked((prev) => {
       if (prev) {
-        likeOrUnlikePlace(`place/${placeID}/unLike`, {
-          method: "POST",
-          type: "authenticated",
-        });
+        likeOrUnlikePlace(
+          `${isBusinessPlace ? "business" : "place"}/${placeID}/unLike`,
+          {
+            method: "POST",
+            type: "authenticated",
+          }
+        );
       } else {
-        likeOrUnlikePlace(`place/${placeID}/like`, {
-          method: "POST",
-          type: "authenticated",
-        });
+        likeOrUnlikePlace(
+          `${isBusinessPlace ? "business" : "place"}/${placeID}/like`,
+          {
+            method: "POST",
+            type: "authenticated",
+          }
+        );
       }
 
       return !prev;

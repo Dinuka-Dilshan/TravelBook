@@ -11,24 +11,53 @@ const getAuth = () => {
   return null;
 };
 
-const RequireAuth = () => {
+const checkType = (
+  userType: string | null,
+  allowedType: string | undefined
+) => {
+  if (!allowedType) return true;
+  return userType === allowedType;
+};
+
+interface Props {
+  allowedType?: "admin" | "normalUser" | "businessUser";
+}
+
+const RequireAuth: React.FC<Props> = ({ allowedType }) => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  let isAuthenticated;
+  let isLoggedIn;
+  let isAllowedUser;
+  let userType;
 
   if (user.token) {
-    isAuthenticated = true;
+    isLoggedIn = true;
+    isAllowedUser = checkType(user.userType, allowedType);
+    userType = user.userType;
   } else {
     const auth = getAuth();
 
     if (auth) {
+      isAllowedUser = checkType(auth.userType, allowedType);
       dispatch(login(auth));
-      isAuthenticated = true;
+      isLoggedIn = true;
+      userType = auth.userType;
     }
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to={"/login"} replace />;
+  if (!isLoggedIn) {
+    return <Navigate to={"/login"} replace />;
+  }
+  if (isAllowedUser) {
+    return <Outlet />;
+  } else {
+    if (userType === "normalUser") {
+      return <Navigate to={"/places"} replace />;
+    } else {
+      return <Navigate to={"/business/dashboard"} replace />;
+    }
+  }
 };
 
 export default RequireAuth;
