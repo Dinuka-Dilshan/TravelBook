@@ -116,7 +116,6 @@ export const addPlace = async (req, res, next) => {
     const savedPlace = await newPlace.save();
     res.json(savedPlace);
   } catch (error) {
-    console.log(error);
     return next(ErrorResponse());
   }
 };
@@ -305,6 +304,42 @@ export const unLikePlaceController = async (req, res, next) => {
     });
 
     res.json({ message: "UnLiked successfully" });
+  } catch (error) {
+    return next(ErrorResponse());
+  }
+};
+
+export const ratePlace = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { id: placeID } = req.params;
+    const { amount } = req.body;
+    await Place.findOneAndUpdate(
+      {
+        _id: mongoose.Types.ObjectId(placeID),
+      },
+      {
+        $pull: {
+          ratings: { user: id },
+        },
+      }
+    );
+    const updatedPlace = await Place.findOneAndUpdate(
+      {
+        _id: mongoose.Types.ObjectId(placeID),
+      },
+      {
+        $push: {
+          ratings: {
+            amount: amount,
+            user: mongoose.Types.ObjectId(id),
+          },
+        },
+      },
+      { new: true }
+    );
+
+    res.json({ message: "Rated successfully", updatedPlace });
   } catch (error) {
     return next(ErrorResponse());
   }

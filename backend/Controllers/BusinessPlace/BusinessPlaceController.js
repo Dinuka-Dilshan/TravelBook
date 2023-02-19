@@ -91,7 +91,6 @@ export const getUsersPlace = async (req, res, next) => {
     );
     res.json(businessPlace);
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 };
@@ -346,7 +345,6 @@ export const LikePlaceController = async (req, res, next) => {
 
     res.json({ message: "Liked successfully" });
   } catch (error) {
-    console.log(error);
     return next(ErrorResponse());
   }
 };
@@ -420,7 +418,6 @@ export const rateBusinessPlace = async (req, res, next) => {
 
     res.json({ message: "Rated successfully", updatedPlace });
   } catch (error) {
-    console.log(error);
     return next(ErrorResponse());
   }
 };
@@ -473,7 +470,6 @@ export const getDashBoardDetails = async (req, res, next) => {
       monthlyBookings: formatMonthlyReport(monthlyBookings),
     });
   } catch (error) {
-    console.log(error);
     next(ErrorResponse());
   }
 };

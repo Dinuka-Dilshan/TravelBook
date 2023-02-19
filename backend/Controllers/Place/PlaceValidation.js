@@ -30,18 +30,18 @@ export const placeValidation = checkSchema({
     notEmpty: {
       errorMessage: "latitude cannot be empty",
     },
-    isNumeric:{
-      errorMessage:'latitude should be a number'
-    }
+    isNumeric: {
+      errorMessage: "latitude should be a number",
+    },
   },
   longitude: {
     in: ["body"],
     notEmpty: {
       errorMessage: "longitude cannot be empty",
     },
-    isNumeric:{
-      errorMessage:'longitude should be a number'
-    }
+    isNumeric: {
+      errorMessage: "longitude should be a number",
+    },
   },
 });
 
@@ -84,4 +84,11 @@ export const addPhotoValidation = checkSchema({
   },
 });
 
-
+export const rateValidation = checkSchema({
+  amount: {
+    in: ["body"],
+    notEmpty: {
+      errorMessage: "amount cannot be empty",
+    },
+  },
+});

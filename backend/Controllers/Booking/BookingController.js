@@ -55,7 +55,19 @@ export const getAllBookingsOfCustomer = async (req, res, next) => {
     const bookings = await Booking.find({
       customer: id,
     }).populate("place");
-    res.json(bookings);
+    const ratings = await BusinessPlace.aggregate([
+      { $match: { "ratings.user": mongoose.Types.ObjectId(id) } },
+      { $unwind: "$ratings" },
+      { $match: { "ratings.user": mongoose.Types.ObjectId(id) } },
+      {
+        $project: {
+          placeID: "$_id",
+          amount: "$ratings.amount",
+          _id: 0,
+        },
+      },
+    ]);
+    res.json({ bookings, ratings });
   } catch (error) {
     return next(error);
   }
