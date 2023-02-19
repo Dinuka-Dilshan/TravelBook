@@ -1,7 +1,6 @@
 import {
   Button,
   CircularProgress,
-  Container,
   Grid,
   LinearProgress,
   TextField,
@@ -226,7 +225,12 @@ const AddPlace = () => {
           />
 
           <Button
-            sx={{ mt: "2rem", mr: "1rem", width: "25%" }}
+            sx={{
+              mt: "2rem",
+              mr: "1rem",
+              width: "25%",
+              boxShadow: 0,
+            }}
             variant="contained"
             onClick={handleReset}
           >
@@ -235,8 +239,7 @@ const AddPlace = () => {
           <Button
             disabled={!state.isValid || isLoading || !isLocationSet.isSet}
             onClick={handleAddPlace}
-            sx={{ mt: "2rem", width: "25%" }}
-            color={"success"}
+            sx={{ mt: "2rem", width: "25%", bgcolor: "#FF5D7A", boxShadow: 0 }}
             variant="contained"
           >
             Save

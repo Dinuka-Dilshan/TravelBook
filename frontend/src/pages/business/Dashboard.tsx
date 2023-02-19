@@ -13,6 +13,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import Loader from "../../components/Loader";
 import useFetch from "../../hooks/useFetch";
 import { DashboardResponse } from "../../models/BusinessPlace";
 import { useAppSelector } from "../../store/hooks";
@@ -24,8 +25,11 @@ import { genderData, monthlyViews } from "./dummydata";
 const DashBoard = () => {
   const user = useAppSelector(selectUser);
 
-  const { fetchData: fetchDashBoard, data: dashBoard } =
-    useFetch<DashboardResponse>();
+  const {
+    fetchData: fetchDashBoard,
+    data: dashBoard,
+    isLoading,
+  } = useFetch<DashboardResponse>();
 
   useEffect(() => {
     fetchDashBoard("business/user/dashboard", {
@@ -33,6 +37,20 @@ const DashBoard = () => {
       type: "authenticated",
     });
   }, []);
+
+  if (isLoading) {
+    return (
+      <Box
+        width="100%"
+        height="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Loader />
+      </Box>
+    );
+  }
 
   return (
     <Box p="2rem">

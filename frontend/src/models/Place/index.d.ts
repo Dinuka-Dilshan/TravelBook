@@ -30,4 +30,5 @@ export interface Place {
   viewRecords: { time: string; user: string }[];
   likedBy: string[];
   isLiked?: boolean;
+  ratings: { amount: number; user: string }[];
 }

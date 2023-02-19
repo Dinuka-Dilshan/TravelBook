@@ -1,7 +1,8 @@
-import { Grid, LinearProgress, Typography } from "@mui/material";
+import { Box, Grid, LinearProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import { BusinessPlace } from "../../models/BusinessPlace";
+import Loader from "../Loader";
 import MyPlace from "./MyPlace";
 import MyPlaceMedia from "./MyPlaceMedia";
 import RegisterPlace from "./RegisterPlace";
@@ -19,16 +20,21 @@ const PlaceDetails = () => {
     fetchData("business/user/place", { method: "GET", type: "authenticated" });
   }, []);
 
-  if (isLoading) {
-    return (
-      <LinearProgress
-        sx={{
-          background: "linear-gradient(to right, red, purple)",
-          height: "0.1rem",
-        }}
-      />
-    );
-  }
+
+    if (isLoading) {
+      return (
+        <Box
+          width="100%"
+          height="100vh"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Loader />
+        </Box>
+      );
+    }
+  
 
   if (!businessPlace && !isLoading) {
     return <RegisterPlace />;

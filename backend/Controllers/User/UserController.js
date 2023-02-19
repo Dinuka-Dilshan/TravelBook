@@ -35,7 +35,6 @@ export const signUpController = async (req, res, next) => {
   try {
     imageUrl = await uploadFile(req.file);
   } catch (error) {
-    console.log(error);
     return next(ErrorResponse({ code: 415, message: error }));
   }
 

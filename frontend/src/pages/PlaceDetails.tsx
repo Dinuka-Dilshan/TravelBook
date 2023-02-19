@@ -7,6 +7,7 @@ import {
   Grid,
   IconButton,
   LinearProgress,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
@@ -27,6 +28,8 @@ import ShareLocation from "../components/ShareLocation/ShareLocation";
 import useFetch from "../hooks/useFetch";
 import useHelmet from "../hooks/useHelmet";
 import { Place } from "../models/Place";
+import { useAppSelector } from "../store/hooks";
+import { selectUser } from "../store/slices/authSlice";
 import { capitalizeEachFirst, removeWhiteSpacesWith } from "../utils/string";
 const srcset = (image: string, size: number, rows = 1, cols = 1) => {
   return {
@@ -39,6 +42,7 @@ const srcset = (image: string, size: number, rows = 1, cols = 1) => {
 
 const PlaceDetails = () => {
   const { id } = useParams();
+  const { _id } = useAppSelector(selectUser);
 
   const {
     isLoading,
@@ -118,7 +122,11 @@ const PlaceDetails = () => {
               ...prev,
               isRaingOpen: false,
             }));
+            refetchPlaceDetails();
           }}
+          place={place}
+          rating={place?.ratings.find((rate) => rate.user === _id)?.amount}
+          refresh={refetchPlaceDetails}
         />
       )}
 
@@ -185,7 +193,7 @@ const PlaceDetails = () => {
               fontFamily={"Poor Story, cursive"}
               sx={{ fontSize: { lg: "1.5rem", xs: "1.3rem" } }}
             >
-              {capitalizeEachFirst(place?.name || "")}
+              {capitalizeEachFirst(place?.name || "")}{" "}
             </Typography>
             <Box
               display="flex"
@@ -193,6 +201,15 @@ const PlaceDetails = () => {
               sx={{ gap: { lg: 2, xs: 1 } }}
               alignItems="center"
             >
+              <ShowRating
+                rating={place?.ratings.reduce((acc, val, index) => {
+                  if (index === place.ratings.length - 1) {
+                    return (acc + val.amount) / place.ratings.length;
+                  } else {
+                    return acc + val.amount;
+                  }
+                }, 0)}
+              />
               <IconButton
                 onClick={() => iconButtonClickhandler("isAddPhotoOpen")}
               >
@@ -259,3 +276,21 @@ const PlaceDetails = () => {
 };
 
 export default PlaceDetails;
+
+const ShowRating = ({ rating }: { rating: number | undefined }) => {
+  return (
+    <Tooltip title={'Average Rating'}>
+      <Typography
+        fontSize="1.1rem"
+        fontWeight="bold"
+        component="span"
+        color="#FF5D7A"
+      >
+        {rating}
+        <Typography component="span" fontSize="0.7rem">
+          /5
+        </Typography>
+      </Typography>
+    </Tooltip>
+  );
+};
