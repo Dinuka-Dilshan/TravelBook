@@ -211,7 +211,6 @@ const BookingCard = ({
                 parseISO(booking.startDate)
               ) || 1)}
           </Typography>
-          <Typography fontSize="1rem"></Typography>
         </Grid>
       </Grid>
     </Box>
@@ -236,5 +235,5 @@ const filterData = ({
   booking?.customer?.name.toLowerCase().includes(searchText.toLowerCase()) ||
   booking._id.includes(searchText) ||
   booking.package.name.toLowerCase().includes(searchText.toLowerCase()) ||
-  booking.status.toLowerCase().includes(searchText.toLowerCase())||
+  booking.status.toLowerCase().includes(searchText.toLowerCase()) ||
   booking.package.dailyPrice.toString().includes(searchText);

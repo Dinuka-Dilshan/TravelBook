@@ -4,11 +4,15 @@ import { differenceInDays, parseISO } from "date-fns";
 import { useEffect } from "react";
 import { HiOutlineHome } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import RateBusinessPlace from "../components/Bookings/RateBusinessPlace";
 import useFetch from "../hooks/useFetch";
 import { Booking } from "../models/Booking";
 
 const ViewMyBookings = () => {
-  const { data, error, fetchData, isError, isLoading } = useFetch<Booking[]>();
+  const { data, error, fetchData, isError, isLoading } = useFetch<{
+    bookings: Booking[];
+    ratings: { amount: number; placeID: string }[];
+  }>();
 
   useEffect(() => {
     fetchData("booking/customer", { method: "GET", type: "authenticated" });
@@ -23,7 +27,7 @@ const ViewMyBookings = () => {
       >
         My Bookings
       </Typography>
-      {data?.length === 0 && (
+      {data?.bookings.length === 0 && (
         <Box
           width={"100%"}
           height="80vh"
@@ -31,16 +35,25 @@ const ViewMyBookings = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Typography fontSize={'1.5rem'} fontWeight={"bold"} fontFamily={"Poor Story, cursive"}>
+          <Typography
+            fontSize={"1.5rem"}
+            fontWeight={"bold"}
+            fontFamily={"Poor Story, cursive"}
+          >
             You haven't book any places yet!
           </Typography>
         </Box>
       )}
       <Grid container justifyContent="center" gap={2}>
-        {data?.map((booking, index) => {
+        {data?.bookings.map((booking, index) => {
           return (
             <Grid xs={6} key={index} item>
-              <BookingCard {...booking} />
+              <BookingCard
+                booking={booking}
+                rating={data.ratings.find(
+                  (rate) => rate.placeID === booking.place?._id
+                )}
+              />
             </Grid>
           );
         })}
@@ -51,17 +64,17 @@ const ViewMyBookings = () => {
 
 export default ViewMyBookings;
 
-const BookingCard = (booking: Booking) => {
+const BookingCard = ({
+  booking,
+  rating,
+}: {
+  booking: Booking;
+  rating: { amount: number; placeID: string } | undefined;
+}) => {
   const navigate = useNavigate();
+
   return (
-    <Box
-      my="1rem"
-      border={1}
-      borderColor="#EAE9EE"
-      p="2rem"
-      borderRadius={2}
-      onClick={() => navigate(`/hotels/${booking?.place?._id}`)}
-    >
+    <Box my="1rem" border={1} borderColor="#EAE9EE" p="2rem" borderRadius={2}>
       <Grid container>
         <Grid item xs={6}>
           <Chip label={booking.status} color={getColor(booking.status)} />
@@ -117,6 +130,9 @@ const BookingCard = (booking: Booking) => {
         <Grid item xs={6}>
           <img src={booking.place?.photos[0]} width="100%" height={"100%"} />
         </Grid>
+        {booking.status === "checkedOut" && (
+          <RateBusinessPlace booking={booking} rating={rating?.amount} />
+        )}
       </Grid>
     </Box>
   );

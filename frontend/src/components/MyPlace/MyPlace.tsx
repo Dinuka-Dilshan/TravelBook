@@ -5,6 +5,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { VscDebugBreakpointUnsupported as PointIcon } from "react-icons/vsc";
 import useFetch from "../../hooks/useFetch";
 import { BusinessPlace, Package } from "../../models/BusinessPlace";
+import Loader from "../Loader";
 import LocationBox from "../Location/LocationBox";
 import PackageCard from "../PackageCard";
 import FacilitySelect from "./FacilitySelect";
@@ -153,6 +154,20 @@ const MyPlace = () => {
   useEffect(() => {
     fetchData("business/user/place", { method: "GET", type: "authenticated" });
   }, []);
+
+  if (isLoading) {
+    return (
+      <Box
+        width="100%"
+        height="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Loader />
+      </Box>
+    );
+  }
 
   return (
     <>

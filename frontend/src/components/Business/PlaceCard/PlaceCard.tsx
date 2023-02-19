@@ -1,26 +1,20 @@
-import ShareIcon from "@mui/icons-material/Share";
 import {
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
-  IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { formatDistanceToNow, parseISO } from "date-fns";
 import { memo, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BusinessPlace } from "../../../models/BusinessPlace";
-import { Place } from "../../../models/Place";
 import {
   capitalizeEachFirst,
   getRandomItemFromStringArray,
-  removeWhiteSpacesWith,
   truncate,
 } from "../../../utils/string";
-import AvatarLink from "../../Avatar";
 import ShareLocation from "../../ShareLocation/ShareLocation";
 
 const PlaceCard: React.FC<BusinessPlace> = ({
@@ -35,6 +29,7 @@ const PlaceCard: React.FC<BusinessPlace> = ({
   country,
   state,
   packages,
+  ratings,
 }) => {
   const [isShareOpen, setIsShareOpen] = useState(false);
   const navigate = useNavigate();
@@ -87,17 +82,32 @@ const PlaceCard: React.FC<BusinessPlace> = ({
             {/* <Rating readOnly value={5} /> */}
           </Box>
           <Typography mt="0.3rem">{truncate(description, 210)}</Typography>
-          <Typography
-            mt="0.5rem"
-            fontSize="1rem"
-            fontWeight="bold"
-            fontFamily={"Poor Story, cursive"}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            LKR {lowestPrice}{" "}
-            <Typography component="span" fontFamily={"Poor Story, cursive"}>
-              Per Day
+            <Typography
+              mt="0.5rem"
+              fontSize="1rem"
+              fontWeight="bold"
+              fontFamily={"Poor Story, cursive"}
+            >
+              LKR {lowestPrice}{" "}
+              <Typography component="span" fontFamily={"Poor Story, cursive"}>
+                Per Day
+              </Typography>
             </Typography>
-          </Typography>
+            <ShowRating
+              rating={ratings.reduce((acc, val, index) => {
+                if (index === ratings.length - 1) {
+                  return (acc + val.amount) / ratings.length;
+                } else {
+                  return acc + val.amount;
+                }
+              }, 0)}
+            />
+          </Box>
         </CardContent>
       </CardActionArea>
     </Card>
@@ -105,3 +115,21 @@ const PlaceCard: React.FC<BusinessPlace> = ({
 };
 
 export default memo(PlaceCard);
+
+const ShowRating = ({ rating }: { rating: number | undefined }) => {
+  return (
+    <Tooltip title={"Average Rating"}>
+      <Typography
+        fontSize="1.2rem"
+        fontWeight="bold"
+        component="span"
+        color="#FF5D7A"
+      >
+        {rating}
+        <Typography component="span" fontSize="0.6rem">
+          /5
+        </Typography>
+      </Typography>
+    </Tooltip>
+  );
+};
