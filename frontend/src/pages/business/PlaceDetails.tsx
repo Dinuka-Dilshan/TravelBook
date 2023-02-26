@@ -24,6 +24,7 @@ import LocationBox from "../../components/Location/LocationBox";
 import FacilityIcons from "../../components/MyPlace/FacilityIconMapper";
 import ReactGallery from "../../components/Photo-Grid/ReactGallery";
 import PlaceLocationDetailsCard from "../../components/PlaceLocationDetailsCard";
+//@ts-ignore
 import ShareLocation from "../../components/ShareLocation/ShareLocation";
 import useFetch from "../../hooks/useFetch";
 import useHelmet from "../../hooks/useHelmet";
@@ -49,7 +50,7 @@ const PlaceDetails = () => {
 
   const [refetch, setRefetch] = useState(false);
   const { fetchData: notifyViewRecord } = useFetch();
-  useHelmet(place?.name);
+  useHelmet((title) => `${title} | ${place?.name}`);
 
   const iconButtonClickhandler = (key: keyof typeof iconButtonStatus) => {
     setIconButtonStatus((prev) => {

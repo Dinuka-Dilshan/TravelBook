@@ -11,6 +11,7 @@ import {
   getDashBoardDetails,
   getLikedPlacesController,
   getPlaceByID,
+  getTrendingBusinessPlacesController,
   getUsersPlace,
   LikePlaceController,
   placeViewRecord,
@@ -34,6 +35,7 @@ const router = express.Router();
 
 router.use(Auth);
 router.get("/", getAllPlaces);
+router.get("/trending", getTrendingBusinessPlacesController);
 router.get("/likedPlaces", getLikedPlacesController);
 router.get("/:id", getPlaceByID);
 router.post("/:id/view", placeViewRecord);

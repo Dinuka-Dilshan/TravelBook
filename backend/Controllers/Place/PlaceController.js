@@ -344,3 +344,36 @@ export const ratePlace = async (req, res, next) => {
     return next(ErrorResponse());
   }
 };
+
+export const getTrendingPlacesController = async (req, res, next) => {
+  try {
+    const places = await Place.aggregate([
+      {
+        $project: {
+          views: { $size: "$viewRecords" },
+          name: 1,
+          description: 1,
+          state: 1,
+          photos: 1,
+          country: 1,
+          latitude: 1,
+          longitude: 1,
+          rating: {
+            $avg: "$ratings.amount",
+          },
+          likedBy: 1,
+        },
+      },
+      {
+        $sort: {
+          views: -1,
+        },
+      },
+    ]);
+
+    res.json(places);
+  } catch (error) {
+    console.log(error);
+    return next(ErrorResponse());
+  }
+};

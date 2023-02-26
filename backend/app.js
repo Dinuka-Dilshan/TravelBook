@@ -1,13 +1,14 @@
+import cors from "cors";
 import * as dotenv from "dotenv";
-dotenv.config();
 import express from "express";
 import mongoose from "mongoose";
-import cors from "cors";
+dotenv.config();
 
-import userRoutes from "./Routes/UserRoutes.js";
-import placeRoutes from "./Routes/PlaceRoutes.js";
-import businessPlaceRoutes from "./Routes/BusinessPlaceRoutes.js";
+import adminRoutes from "./Routes/AdminRoutes.js";
 import bookingRoutes from "./Routes/BookingRoutes.js";
+import businessPlaceRoutes from "./Routes/BusinessPlaceRoutes.js";
+import placeRoutes from "./Routes/PlaceRoutes.js";
+import userRoutes from "./Routes/UserRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,7 @@ app.use("/user", userRoutes);
 app.use("/place", placeRoutes);
 app.use("/business", businessPlaceRoutes);
 app.use("/booking", bookingRoutes);
+app.use("/admin", adminRoutes);
 
 app.use((err, req, res, next) => {
   if (err.errorCode) {

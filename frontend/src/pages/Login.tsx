@@ -85,6 +85,10 @@ const Login = () => {
       if (data.userType === "normalUser") {
         navigate("/places", { replace: true });
       }
+
+      if (data.userType === "admin") {
+        navigate("/admin/dashboard", { replace: true });
+      }
     }
   }, [data]);
   return (

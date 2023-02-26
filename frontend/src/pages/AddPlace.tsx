@@ -70,7 +70,7 @@ const AddPlace = () => {
       },
     },
   });
-  useHelmet("Add place");
+  useHelmet((title) => `${title} | Add Place`);
   const { data, error, fetchData, isError, isLoading } = useFetch<Place>();
   const [image, setImage] = useState<File>();
   const [location, setLocation] = useState({ lat: 6.9271, lng: 79.8612 });

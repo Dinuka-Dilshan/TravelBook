@@ -1,4 +1,6 @@
-import { PlaceComment } from "../Place";
+import { Booking } from "../Booking";
+import { Place, PlaceComment } from "../Place";
+import { User } from "../User";
 
 interface Package {
   dailyPrice: number;
@@ -35,6 +37,8 @@ export interface BusinessPlace {
   ratings: { amount: number; user: string }[];
 }
 
+export type customerBooking = Omit<User & Booking, "viewRecords">;
+
 export interface DashboardResponse {
   comments: number;
   likes: number;
@@ -43,4 +47,7 @@ export interface DashboardResponse {
   views: number;
   ratings: { amount: number; user: string }[];
   monthlyBookings: { _id: number; income: number }[];
+  genderWise: { male: number; female: number };
+  customerBookings: customerBooking[];
+  popularPackages: { name: string; value: number }[];
 }

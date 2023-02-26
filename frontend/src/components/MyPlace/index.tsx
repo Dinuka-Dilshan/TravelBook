@@ -52,6 +52,8 @@ const PlaceDetails = () => {
       </Grid>
     );
   }
+
+  return <></>
 };
 
 export default PlaceDetails;

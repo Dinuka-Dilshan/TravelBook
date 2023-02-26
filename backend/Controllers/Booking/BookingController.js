@@ -14,6 +14,7 @@ export const getAllBookingsOfPlace = async (req, res, next) => {
     const bookings = await Booking.find({
       place: businessPlace._id,
     })
+      .sort({ placedOn: -1 })
       .populate("customer")
       .populate("place");
     res.json(bookings);

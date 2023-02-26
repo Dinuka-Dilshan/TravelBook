@@ -54,8 +54,10 @@ const RequireAuth: React.FC<Props> = ({ allowedType }) => {
   } else {
     if (userType === "normalUser") {
       return <Navigate to={"/places"} replace />;
-    } else {
+    } else if (userType === "businessUser") {
       return <Navigate to={"/business/dashboard"} replace />;
+    } else {
+      return <Navigate to={"/admin/dashboard"} replace />;
     }
   }
 };

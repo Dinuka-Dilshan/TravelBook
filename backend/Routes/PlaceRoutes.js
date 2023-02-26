@@ -8,6 +8,7 @@ import {
   getAllPlaces,
   getLikedPlacesController,
   getPlaceByID,
+  getTrendingPlacesController,
   LikePlaceController,
   placeViewRecord,
   ratePlace,
@@ -27,6 +28,7 @@ const router = express.Router();
 router.use(Auth);
 // router.use(authUserType([USER_TYPES.admin,USER_TYPES.businessUser]));
 router.get("/", getAllPlaces);
+router.get("/trending", getTrendingPlacesController);
 router.get("/likedPlaces", getLikedPlacesController);
 router.get("/:id", getPlaceByID);
 router.post("/", upload.single("placeImage"), placeValidation, addPlace);

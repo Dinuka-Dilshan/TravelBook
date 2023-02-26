@@ -2,10 +2,11 @@ import NavigationIcon from "@mui/icons-material/Navigation";
 import { Avatar, Chip, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useState } from "react";
-import { CgProfile } from "react-icons/cg";
+import { FaUserFriends } from "react-icons/fa";
+import { GrTransaction } from "react-icons/gr";
 import { HiLogout } from "react-icons/hi";
-import { MdOutlineDashboard, MdOutlinePlace } from "react-icons/md";
-import { TbBrandBooking } from "react-icons/tb";
+import { MdInsights, MdOutlineDashboard, MdPlace } from "react-icons/md";
+import { RiHotelLine } from "react-icons/ri";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store/hooks";
@@ -36,8 +37,8 @@ const NavItem: React.FC<NavItemProps> = ({ icon, title, to }) => {
           backgroundColor: "#EBF5FF",
           color: "#2598FF",
         },
-        backgroundColor: location === to ? "#EBF5FF" : "",
-        color: location === to ? "#2598FF" : "",
+        backgroundColor: location.includes(to) ? "#EBF5FF" : "",
+        color: location.includes(to) ? "#2598FF" : "",
       }}
     >
       {icon}
@@ -48,7 +49,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, title, to }) => {
   );
 };
 
-const BusinessAppBar = () => {
+const AdminAppBar = () => {
   const user = useAppSelector(selectUser);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const dispatch = useDispatch();
@@ -85,6 +86,7 @@ const BusinessAppBar = () => {
           my="1rem"
         >
           <NavigationIcon />
+
           <Typography
             fontSize={"1.4rem"}
             fontWeight={"bold"}
@@ -92,40 +94,41 @@ const BusinessAppBar = () => {
             textAlign="center"
             letterSpacing={2}
             fontFamily={"Poor Story, cursive"}
-            sx={{ cursor: "pointer" }}
+            sx={{ cursor: "pointer", px: 0.1 }}
           >
             TravelMate
           </Typography>
-          <Chip
-            label="Business"
-            variant="outlined"
-            sx={{ padding: 0.1, ml: 1 }}
-          />
+          <Chip label="Admin" variant="outlined" sx={{ padding: 0.1, ml: 1 }} />
         </Box>
         <NavItem
           icon={<MdOutlineDashboard size="1.5rem" />}
           title="DashBoard"
-          to={"/business/dashboard"}
+          to={"/admin/dashboard"}
         />
         <NavItem
-          icon={<MdOutlinePlace size="1.5rem" />}
-          title="My Place"
-          to={"/business/myplace"}
+          icon={<GrTransaction size="1.5rem" />}
+          title="Transactions"
+          to={"/admin/transactions"}
         />
         <NavItem
-          icon={<TbBrandBooking size="1.5rem" />}
-          title="Bookings"
-          to={"/business/bookings"}
+          icon={<FaUserFriends size="1.5rem" />}
+          title="Users"
+          to={"/admin/users"}
         />
-        {/* <NavItem
-          icon={<RiBroadcastFill size="1.5rem" />}
-          title="Advertising"
-          to={"/business/advertising"}
-        /> */}
         <NavItem
-          icon={<CgProfile size="1.5rem" />}
-          title="Profile"
-          to={"/business/profile"}
+          icon={<MdPlace size="1.5rem" />}
+          title="Places"
+          to={"/admin/places"}
+        />
+        <NavItem
+          icon={<RiHotelLine size="1.5rem" />}
+          title="Business Places"
+          to={"/admin/business"}
+        />
+        <NavItem
+          icon={<MdInsights size="1.5rem" />}
+          title="Insight"
+          to={"/admin/insight"}
         />
       </Box>
       <Box
@@ -156,4 +159,4 @@ const BusinessAppBar = () => {
   );
 };
 
-export default BusinessAppBar;
+export default AdminAppBar;

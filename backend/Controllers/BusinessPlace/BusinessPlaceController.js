@@ -460,6 +460,65 @@ export const getDashBoardDetails = async (req, res, next) => {
         },
       },
     ]);
+
+    const customerBookings = await Booking.aggregate([
+      {
+        $match: {
+          place: mongoose.Types.ObjectId(place._id),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "customer",
+          foreignField: "_id",
+          as: "customer",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$customer", 0] }, "$$ROOT"],
+          },
+        },
+      },
+      { $project: { customer: 0, viewRecords: 0, password: 0 } },
+    ]);
+
+    const popularPackages = await Booking.aggregate([
+      {
+        $match: {
+          place: mongoose.Types.ObjectId(place._id),
+        },
+      },
+      {
+        $group: {
+          _id: "$package.name",
+          count: { $count: {} },
+        },
+      },
+    ]);
+
+    const genderWise = customerBookings.reduce(
+      (acc, item) => {
+        if (item.gender === "male") {
+          return {
+            ...acc,
+            male: acc.male + 1,
+          };
+        }
+
+        return {
+          ...acc,
+          female: acc.female + 1,
+        };
+      },
+      {
+        male: 0,
+        female: 0,
+      }
+    );
+
     res.json({
       views: place.viewRecords.length,
       comments: place.comments.length,
@@ -468,8 +527,48 @@ export const getDashBoardDetails = async (req, res, next) => {
       rate: calculateRating(place.ratings),
       totalIncome: totalBooking[0]?.totalIncome,
       monthlyBookings: formatMonthlyReport(monthlyBookings),
+      customerBookings,
+      genderWise,
+      popularPackages: popularPackages.map((pkg) => ({
+        name: pkg._id,
+        value: pkg.count,
+      })),
     });
   } catch (error) {
+    console.log(error);
     next(ErrorResponse());
+  }
+};
+
+export const getTrendingBusinessPlacesController = async (req, res, next) => {
+  try {
+    const places = await BusinessPlace.aggregate([
+      {
+        $project: {
+          views: { $size: "$viewRecords" },
+          name: 1,
+          description: 1,
+          state: 1,
+          photos: 1,
+          country: 1,
+          latitude: 1,
+          longitude: 1,
+          rating: {
+            $avg: "$ratings.amount",
+          },
+          likedBy: 1,
+        },
+      },
+      {
+        $sort: {
+          views: -1,
+        },
+      },
+    ]);
+
+    res.json(places);
+  } catch (error) {
+    console.log(error);
+    return next(ErrorResponse());
   }
 };

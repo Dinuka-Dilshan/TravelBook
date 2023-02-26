@@ -217,7 +217,7 @@ const BookingCard = ({
   );
 };
 
-const getColor = (status: string) => {
+export const getColor = (status: string) => {
   if (status === "pending") return "warning";
   else if (status === "approved") return "secondary";
   else if (status === "checkedIn") return "info";
