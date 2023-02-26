@@ -1,30 +1,22 @@
-import { Grid, TextField, Tooltip } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
+import PlaceCard from "../components/Business/PlaceCard/PlaceCard";
 import ErrorFS from "../components/ErrorFS";
 import LoaderFS from "../components/LoaderFS";
-import PlaceCard from "../components/Business/PlaceCard/PlaceCard";
 import useFetch from "../hooks/useFetch";
+import useHelmet from "../hooks/useHelmet";
 import { BusinessPlace } from "../models/BusinessPlace";
-import { Place } from "../models/Place";
 
 const Hotels = () => {
   const { isLoading, data, fetchData, isError, error } =
     useFetch<BusinessPlace[]>();
-  // const [filter, setFilter] = useState("");
-  // const [filteredData, setFilteredData] = useState<Place[]>();
 
   useEffect(() => {
     fetchData("business", { method: "GET", type: "authenticated" });
   }, [fetchData]);
 
-  // useEffect(() => {
-  //   setFilteredData(
-  //     data?.filter((place) =>
-  //       place.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
-  //     )
-  //   );
-  // }, [data, filter]);
+  useHelmet((title) => `${title} | Hotels`);
 
   if (isError) {
     return <ErrorFS error={error} />;

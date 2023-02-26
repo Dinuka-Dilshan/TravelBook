@@ -1,5 +1,5 @@
-import { User } from "../User";
 import { BusinessPlace } from "../BusinessPlace";
+import { User } from "../User";
 
 export interface Booking {
   package: {
@@ -16,6 +16,6 @@ export interface Booking {
   status: string;
   startDate: string;
   endDate: string;
-  totalPriece?: number;
-  _id:string
+  totalPrice?: number;
+  _id: string;
 }

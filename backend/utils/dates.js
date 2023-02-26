@@ -7,6 +7,21 @@ export function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+const monthlyReport = {
+  January: 0,
+  February: 0,
+  March: 0,
+  April: 0,
+  May: 0,
+  June: 0,
+  July: 0,
+  August: 0,
+  September: 0,
+  October: 0,
+  November: 0,
+  December: 0,
+};
+
 const monthNames = [
   "",
   "January",
@@ -23,5 +38,20 @@ const monthNames = [
   "December",
 ];
 
-export const formatMonthlyReport = (report) =>
-  report.map((monthly) => ({ month: monthNames[monthly._id], ...monthly }));
+//get full report with month names but as an object
+const getReportWithMonthNames = (report) =>
+  report.reduce((report, monthly) => {
+    const month = monthNames[monthly._id];
+    return { ...report, [month]: monthly };
+  }, monthlyReport);
+
+export const formatMonthlyReport = (report) => {
+  const reportWithMonthNames = getReportWithMonthNames(report);
+  //convert object to array
+  return Object.keys(reportWithMonthNames).map((month) => {
+    return {
+      ...reportWithMonthNames[month],
+      month,
+    };
+  });
+};

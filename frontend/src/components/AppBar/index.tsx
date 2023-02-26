@@ -107,7 +107,7 @@ const AppBar = () => {
         </NavLink>
         <NavLink
           style={({ isActive }) => (isActive ? activeStyles : inActiveStyles)}
-          to={"/hotels"}
+          to={"/search"}
         >
           <BiSearch size={25} />
         </NavLink>
