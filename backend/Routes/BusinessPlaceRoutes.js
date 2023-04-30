@@ -16,6 +16,7 @@ import {
   LikePlaceController,
   placeViewRecord,
   rateBusinessPlace,
+  searchBusinessPlaceController,
   unLikePlaceController,
   updatePlace,
   updatePlacePhotos,
@@ -26,6 +27,7 @@ import {
   facilityValidation,
   rateValidation,
   ruleValidation,
+  searchValidation,
   updatePhotosValidation,
 } from "../Controllers/BusinessPlace/BusinessPlaceValidation.js";
 import Auth, { authUserType } from "../MiddleWare/Auth.js";
@@ -35,6 +37,7 @@ const router = express.Router();
 
 router.use(Auth);
 router.get("/", getAllPlaces);
+router.post("/search", searchValidation, searchBusinessPlaceController);
 router.get("/trending", getTrendingBusinessPlacesController);
 router.get("/likedPlaces", getLikedPlacesController);
 router.get("/:id", getPlaceByID);

@@ -113,3 +113,18 @@ export const rateValidation = checkSchema({
     },
   },
 });
+
+export const searchValidation = checkSchema({
+  state: {
+    in: ["body"],
+    notEmpty: {
+      errorMessage: "state cannot be empty",
+    },
+  },
+  country: {
+    in: ["body"],
+    notEmpty: {
+      errorMessage: "country cannot be empty",
+    },
+  },
+});

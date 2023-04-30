@@ -143,7 +143,7 @@ const BusinessPlaces: React.FC = () => {
       }}
     >
       <Typography fontSize="1rem" fontWeight="bold">
-        Places
+        Business Places
       </Typography>
       <Box
         sx={{

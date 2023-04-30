@@ -31,6 +31,7 @@ const theme = createTheme({
       fontGray: "#545454",
       darkBlue: "#104CBE",
       red: "#d32f2f",
+      pink: "#FF385C",
     },
   },
   typography: {

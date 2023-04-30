@@ -17,9 +17,9 @@ export const getInsightFacts = (report: InsightReportResponse | undefined) => {
       (view) => view._id?.toLowerCase() === report.place.country?.toLowerCase()
     )?.views || 0;
   return {
-    ageGroup: ageGroup[0]._id,
-    country: country[0]._id,
-    gender: gender[0]._id,
+    ageGroup: ageGroup[0]?._id,
+    country: country[0]?._id,
+    gender: gender[0]?._id,
     homeCountryViews: `${((homeCountryViews / totalViews) * 100).toFixed(0)}%`,
   };
 };
