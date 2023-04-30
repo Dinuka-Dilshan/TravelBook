@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { capitalizeEachFirst } from "../utils/string";
 
-const useHelmet = (title: string | undefined | ((title:string) => string)) => {
+const useHelmet = (title: string | undefined | ((title: string) => string)) => {
   const titleRef = useRef<string>();
 
   useEffect(() => {

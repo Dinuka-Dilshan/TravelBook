@@ -20,7 +20,6 @@ import {
   truncate,
 } from "../../utils/string";
 import AvatarLink from "../Avatar";
-import Like from "../Like";
 import ShareLocation from "../ShareLocation/ShareLocation";
 
 const PlaceCard: React.FC<Place> = ({
@@ -35,7 +34,7 @@ const PlaceCard: React.FC<Place> = ({
 }) => {
   const [isShareOpen, setIsShareOpen] = useState(false);
   const navigate = useNavigate();
-  console.log(name);
+
   const shareClickHandler = () => {
     setIsShareOpen(true);
   };

@@ -377,3 +377,26 @@ export const getTrendingPlacesController = async (req, res, next) => {
     return next(ErrorResponse());
   }
 };
+
+export const searchPlaceController = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { country, state } = req.body;
+
+    const places = await Place.aggregate([
+      {
+        $match: {
+          ...(country.length > 0 ? { country } : {}),
+          ...(state.length > 0 ? { state } : {}),
+        },
+      },
+    ]);
+    const placesWithAddedBy = await Place.populate(places, {
+      path: "addedBy",
+      select: ["name", "email", "profilePicture"],
+    });
+    res.json(placesWithAddedBy);
+  } catch (error) {
+    return next(error);
+  }
+};

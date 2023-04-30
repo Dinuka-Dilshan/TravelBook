@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 import Booking from "../../Models/Booking.js";
 import BusinessPlace from "../../Models/BusinessPlace.js";
 import User from "../../Models/User.js";
-import { formatMonthlyReport } from "../../utils/dates.js";
 import ErrorResponse from "../../utils/ErrorResponse.js";
 import { uploadFile } from "../../utils/File.js";
-import { calculateRating } from "../../utils/rate.js";
 import ValidationErrorResponse from "../../utils/ValidationErrorResponse.js";
+import { formatMonthlyReport } from "../../utils/dates.js";
+import { calculateRating } from "../../utils/rate.js";
 
 export const getAllPlaces = async (req, res, next) => {
   try {
@@ -570,5 +570,27 @@ export const getTrendingBusinessPlacesController = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return next(ErrorResponse());
+  }
+};
+
+export const searchBusinessPlaceController = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { country, state } = req.body;
+    const places = await BusinessPlace.aggregate([
+      {
+        $match: {
+          ...(country.length > 0 ? { country } : {}),
+          ...(state.length > 0 ? { state } : {}),
+        },
+      },
+    ]);
+    const placesWithAddedBy = await BusinessPlace.populate(places, {
+      path: "addedBy",
+      select: ["name", "email", "profilePicture"],
+    });
+    res.json(placesWithAddedBy);
+  } catch (error) {
+    return next(error);
   }
 };

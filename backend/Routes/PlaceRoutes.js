@@ -12,12 +12,14 @@ import {
   LikePlaceController,
   placeViewRecord,
   ratePlace,
+  searchPlaceController,
   unLikePlaceController,
 } from "../Controllers/Place/PlaceController.js";
 import {
   addPhotoValidation,
   commentDeleteValidation,
   commentValidation,
+  placeSearchValidation,
   placeValidation,
   rateValidation,
 } from "../Controllers/Place/PlaceValidation.js";
@@ -28,6 +30,7 @@ const router = express.Router();
 router.use(Auth);
 // router.use(authUserType([USER_TYPES.admin,USER_TYPES.businessUser]));
 router.get("/", getAllPlaces);
+router.post("/search", placeSearchValidation, searchPlaceController);
 router.get("/trending", getTrendingPlacesController);
 router.get("/likedPlaces", getLikedPlacesController);
 router.get("/:id", getPlaceByID);
